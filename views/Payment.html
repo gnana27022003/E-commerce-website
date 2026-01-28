@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - E-commerce</title>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav>
+        <div>
+            <a href="home.html">
+                <img src="" alt="Logo">
+                <span>Brand Name</span>
+            </a>
+        </div>
+        <ul>
+            <li><a href="home.html">Home</a></li>
+            <li><a href="">About</a></li>
+            <li><a href="">Contact</a></li>
+            <li><a href="products.html">Products</a></li>
+        </ul>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div>
+        <a href="home.html">Home</a> / 
+        <a href="products.html">Products</a> / 
+        <a href="product.html">Product</a> / 
+        <a href="checkout.html">Checkout</a> / 
+        <span>Payment</span>
+    </div>
+
+    <!-- Checkout Progress -->
+    <div>
+        <div>
+            <span>✓ Cart</span>
+            <span>✓ Address & Payment</span>
+            <span><strong>→ Payment</strong></span>
+            <span>Order Placed</span>
+        </div>
+    </div>
+
+    <main>
+        <h1>Complete Your Payment</h1>
+
+        <div>
+            <!-- Left Side - Payment Details -->
+            <div>
+                <!-- Order Review -->
+                <section>
+                    <h2>Review Your Order</h2>
+                    
+                    <!-- Delivery Address -->
+                    <div>
+                        <h3>Delivery Address</h3>
+                        <p>John Doe</p>
+                        <p>123 Main Street, Apt 4B</p>
+                        <p>New York, NY 10001</p>
+                        <p>Phone: +1 234 567 8900</p>
+                        <a href="checkout.html">Change</a>
+                    </div>
+
+                    <!-- Payment Method -->
+                    <div>
+                        <h3>Payment Method</h3>
+                        <p>Visa ending in •••• 1234</p>
+                        <a href="checkout.html">Change</a>
+                    </div>
+                </section>
+
+                <!-- Payment Form -->
+                <section>
+                    <h2>Enter Payment Details</h2>
+                    
+                    <div>
+                        <p>🔒 <strong>Your payment is secure and encrypted</strong></p>
+                    </div>
+
+                    <form>
+                        <div>
+                            <label for="payment-card-number">Card Number *</label>
+                            <input type="text" id="payment-card-number" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                        </div>
+
+                        <div>
+                            <label for="payment-cardholder">Cardholder Name *</label>
+                            <input type="text" id="payment-cardholder" placeholder="John Doe" required>
+                        </div>
+
+                        <div>
+                            <label for="payment-expiry">Expiry Date *</label>
+                            <input type="text" id="payment-expiry" placeholder="MM/YY" maxlength="5" required>
+                        </div>
+
+                        <div>
+                            <label for="payment-cvv">CVV *</label>
+                            <input type="text" id="payment-cvv" placeholder="123" maxlength="3" required>
+                        </div>
+
+                        <div>
+                            <input type="checkbox" id="billing-same" checked>
+                            <label for="billing-same">Billing address same as shipping address</label>
+                        </div>
+
+                        <div>
+                            <input type="checkbox" id="terms" required>
+                            <label for="terms">I agree to the <a href="">Terms and Conditions</a> and <a href="">Privacy Policy</a> *</label>
+                        </div>
+
+                        <!-- PAY NOW BUTTON - CONNECTED TO ORDER PLACED PAGE -->
+                        <div>
+                            <a href="order-placed.html">
+                                <button type="button">Pay Now - $1,294.92</button>
+                            </a>
+                        </div>
+                    </form>
+
+                    <!-- Alternative Payment Options -->
+                    <div>
+                        <p>Or pay with</p>
+                        <div>
+                            <button type="button">PayPal</button>
+                            <button type="button">Google Pay</button>
+                            <button type="button">Apple Pay</button>
+                        </div>
+                    </div>
+
+                    <!-- Security Info -->
+                    <div>
+                        <h4>Your Security is Our Priority</h4>
+                        <ul>
+                            <li>✓ 256-bit SSL encryption</li>
+                            <li>✓ PCI DSS compliant</li>
+                            <li>✓ Your card details are never stored</li>
+                            <li>✓ Secure payment gateway</li>
+                        </ul>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Side - Order Summary -->
+            <aside>
+                <h3>Order Summary</h3>
+                
+                <!-- Cart Items -->
+                <div>
+                    <div>
+                        <img src="" alt="Product">
+                        <div>
+                            <h4>iPhone 15 Pro Max</h4>
+                            <p>256GB, Black</p>
+                            <p>Qty: 1</p>
+                        </div>
+                        <p><strong>$1,199.00</strong></p>
+                    </div>
+                </div>
+
+                <!-- Price Breakdown -->
+                <div>
+                    <div>
+                        <span>Subtotal (1 item)</span>
+                        <span>$1,199.00</span>
+                    </div>
+                    <div>
+                        <span>Shipping</span>
+                        <span>FREE</span>
+                    </div>
+                    <div>
+                        <span>Tax</span>
+                        <span>$95.92</span>
+                    </div>
+                    <hr>
+                    <div>
+                        <span><strong>Total Amount</strong></span>
+                        <span><strong>$1,294.92</strong></span>
+                    </div>
+                </div>
+
+                <!-- Delivery Estimate -->
+                <div>
+                    <h4>Estimated Delivery</h4>
+                    <p>📦 January 31 - February 2, 2026</p>
+                    <p>Free Standard Shipping</p>
+                </div>
+
+                <!-- Trust Badges -->
+                <div>
+                    <div>🔒 Secure Payment</div>
+                    <div>✓ Money-back Guarantee</div>
+                    <div>↩️ Easy Returns</div>
+                </div>
+
+                <!-- Customer Support -->
+                <div>
+                    <h4>Need Help?</h4>
+                    <p>📞 +1 234 567 890</p>
+                    <p>📧 support@store.com</p>
+                    <p>Available 24/7</p>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 E-commerce Store</p>
+    </footer>
+</body>
+</html>
