@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tell Us About Yourself</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Updated font */
+            margin: 0;
+            padding: 20px;
+            background-color: #F2F0EF; /* Light background */
+        }
+
+        h1 {
+            text-align: center;
+            color: #351E10;
+            font-size: 28px; /* Consistent heading size */
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: #351E10;
+            font-size: 16px; /* Consistent label font size */
+          }
+      
+          .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;  /* Thicker border for emphasis */
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;  /* Smooth transition */
+          }
+      
+          /* Input field border color change on focus */
+          .input-group input:focus {
+            border-color: #351E10;  /* Accent color for focus */
+            box-shadow: 0 0 8px #351E10;  /* Subtle shadow effect */
+            outline: none;  /* Removes default outline */
+          }
+
+        form {
+            max-width: 800px;
+            padding: 40px 60px; /* More padding for better spacing */
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 15px; /* More rounded corners */
+            box-shadow: 0 5px 30px #351E10; /* Enhanced box shadow */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #351E10;
+            font-size: 16px; /* Updated label font size */
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: -10px;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        input[type="number"],
+        input[type="file"],
+        select {
+            font-size: 18px; /* Consistent input field font size */
+            padding: 12px;
+            width: 100%;
+            max-width: 700px;
+            margin-bottom: 20px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Input field focus effect */
+        input[type="text"]:focus,
+        input[type="tel"]:focus,
+        input[type="number"]:focus,
+        input[type="file"]:focus,
+        select:focus {
+            border-color: #351E10; /* Accent color on focus */
+            /* Subtle shadow on focus */
+            outline: none; /* Remove default outline */
+        }
+
+        /* Checkbox styling */
+        .checkbox-group {
+            color: #351E10;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-group label {
+            margin-bottom: 10px;
+            display: block;
+            align-items: center;
+        }
+
+        ::-webkit-input-placeholder {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color:#351E10;
+          }
+       
+        input[type="submit"] {
+            font-size: 18px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Reduced button text size */
+            padding: 8px 16px; /* Reduced padding for a smaller button */
+            margin: 20px auto; /* Space around and center the button */
+            display: block; /* Block element to make centering possible */
+            background-color: #2a55e5; /* Button background color */
+            color: white; /* White text */
+            border: none; /* Remove default borders */
+            border-radius: 5px; /* Slightly rounded corners */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: auto; /* Make the button adjust to its content */
+            min-width: 150px; /* Set a minimum width */
+        }
+        
+        input[type="submit"]:hover {
+            background-color: #351E10; /* Darker on hover */
+        }
+        
+
+        .terms {
+            font-size: 12px;
+            color: #351E10;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .terms a {
+            color:#351E10;
+            text-decoration: none;
+        }
+
+        @media (max-width: 480px) {
+            form {
+                padding: 30px;
+                width: 90%;
+            }
+
+            input[type="text"],
+            input[type="tel"],
+            input[type="number"],
+            input[type="file"],
+            select {
+                padding: 10px;
+            }
+
+            input[type="submit"] {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Tell us a little about yourself!!</h1>
+    
+    <form action="/userinfo" method="post" onsubmit="return validateForm()">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required placeholder="Enter your name" pattern="[A-Za-z\s]+" title="Only alphabets and spaces are allowed." oninput="validateName('name', 'nameError')">
+        <div id="nameError" class="error-message"></div>
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" name="phone" required placeholder="Enter your 10-digit phone number" maxlength="10" oninput="validatePhone()">
+        <div id="phoneError" class="error-message"></div>
+
+      
+        <div id="checkboxError" class="error-message"></div>
+        <input type="submit" value="Submit">
+    </form>
+
+
+    <script>
+        function validateName(nameId, errorId) 
+        {
+            const nameInput = document.getElementById(nameId);
+            const nameError = document.getElementById(errorId);
+            const invalidChars = /[^A-Za-z\s]/;
+
+            if (invalidChars.test(nameInput.value)) {
+                nameInput.value = nameInput.value.replace(invalidChars, '');
+                nameError.textContent = 'Only alphabets and spaces are allowed.';
+            } else {
+                nameError.textContent = '';
+            }
+        }
+
+       
+        function validatePhone() {
+            const phoneInput = document.getElementById('phone');
+            const phoneError = document.getElementById('phoneError');
+            const isValid = /^\d{10}$/.test(phoneInput.value);
+            phoneError.textContent = isValid ? '' : 'Invalid phone number. Must be 10 digits.';
+        }
+        function validateForm() {
+            const isnameValid = validateName('name', 'nameError');
+            const isLastNameValid = validateName('lastName', 'lastNameError');
+            const isCheckboxValid = validateCheckbox();
+            return isnameValid && isLastNameValid && isCheckboxValid;
+        }
+    </script>
+</body>
+</html>

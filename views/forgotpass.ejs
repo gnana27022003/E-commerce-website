@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Verify Email</title>
+  <link rel="stylesheet" href="/forgotpass.css">
+  <style>
+    .hidden { display: none; }
+    .success { color: green; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+
+<div class="login-container">
+  <h2>Verify Your Email</h2>
+
+  <!-- EMAIL FORM -->
+  <div id="email-section">
+    <input type="email" id="email" placeholder="Enter your email" required>
+    <button onclick="sendOTP()">Verify Email</button>
+  </div>
+
+  <!-- OTP FORM -->
+  <div id="otp-section" class="hidden">
+    <input type="text" id="otp" placeholder="Enter OTP">
+    <button onclick="verifyOTP()">Verify OTP</button>
+  </div>
+
+  <!-- STATUS -->
+  <p id="status"></p>
+</div>
+
+<script>
+async function sendOTP() {
+    const email = document.getElementById('email').value;
+
+    const res = await fetch('/forgotpass', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+        document.getElementById('otp-section').classList.remove('hidden');
+        document.getElementById('status').innerText = "OTP sent to your email";
+    } else {
+        document.getElementById('status').innerText = data.message;
+        document.getElementById('status').className = 'error';
+    }
+}
+
+async function verifyOTP() {
+    const email = document.getElementById('email').value;
+    const otp = document.getElementById('otp').value;
+
+    const res = await fetch('/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, otp })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+        document.getElementById('status').innerHTML = "✔ OTP Verified";
+        document.getElementById('status').className = 'success';
+
+        setTimeout(() => {
+            window.location.href = `/resetpass?email=${email}`;
+        }, 1000);
+    } else {
+        document.getElementById('status').innerHTML = "✖ Invalid OTP";
+        document.getElementById('status').className = 'error';
+    }
+}
+</script>
+
+</body>
+</html>

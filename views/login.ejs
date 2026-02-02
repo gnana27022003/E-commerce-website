@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BrandHub Login</title>
+<link rel="stylesheet" href="/login.css">
+</head>
+<body>
+
+  <div class="background-blur"></div>
+
+  <div class="login-container">
+    <h2>BrandHub Login</h2>
+
+    <form name="loginForm" action="/usersignin" method="POST">
+      <label for="email">email or Email</label>
+      <input type="text" id="email" name="email" placeholder="Enter your email or email" required>
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter your password" required>
+      <div id="error-message" class="error-message"><%= errorMessage %></div>
+      <button type="submit">Sign In</button>
+  </form>
+
+
+    <p>Don't have an account? <a href="/signup" class="signup-link">Sign Up</a></p>
+    <p><a href="/forgotpass" class="signup-link">Forgot Password?</a></p>
+  </div>
+  <script>
+    // Ensure error message is shown if there is an error
+    document.addEventListener('DOMContentLoaded', () => {
+        const errorMessage = "<%= errorMessage %>";
+        if (errorMessage) {
+            document.getElementById('error-message').style.display = 'block';
+        }
+    });
+
+    function togglePassword() {
+        const passwordField = document.getElementById('password');
+        const showPasswordCheckbox = document.getElementById('show-password');
+        if (showPasswordCheckbox.checked) {
+            passwordField.type = 'text';
+        } else {
+            passwordField.type = 'password';
+        }
+    }
+</script>
+
+
+</body>
+</html>

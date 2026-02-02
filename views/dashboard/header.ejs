@@ -1,0 +1,36 @@
+<!-- Top Bar -->
+<div class="topbar">
+    <div class="hamburger" onclick="toggleSidebar()">
+        <span></span><span></span><span></span>
+    </div>
+
+    <div class="logo">BrandHub</div>
+
+    <div class="search-bar">
+        <input type="text" placeholder="Search listings, reviews, or searches...">
+    </div>
+
+    <div class="topbar-right">
+        <div class="notification-icon">
+            🔔<span class="notification-badge">3</span>
+        </div>
+
+        <div class="profile-wrapper">
+            <div class="profile-dropdown" onclick="toggleProfileDropdown(event)">
+                <%= seller.name %> 
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sidebar -->
+<nav class="sidebar" id="sidebar">
+    <ul class="sidebar-menu">
+        <li onclick="location.href='/home'">📊 Dashboard</li>
+        <li onclick="location.href='/addprod'"> Add Products</li>
+        <li data-route="/deleteprod"> Delete Products</li>
+        <li data-route="/orders">Orders</li>
+        <li data-route="/profile">Profile</li>
+        <li onclick="logout()">🚪 Logout</li>
+    </ul>
+</nav>

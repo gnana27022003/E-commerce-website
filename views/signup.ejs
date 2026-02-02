@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Sign Up Page</title>
+ <link rel="stylesheet" href="/signup.css">
+<script>  
+    function validate(){
+      const u=document.getElementById('email').value;
+      const p=document.getElementById('password').value;
+      var p1 = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      var p2 = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+      if (!p1.test(u)) {
+        alert('Please enter a valid email address.');
+        document.getElementById('email').value=''
+        return false
+    }else if (!p2.test(p)) {
+        alert('Password must contain at least one letter, one number, and one special character.');
+        document.getElementById('password').value=''
+        return false
+    }
+    else{
+      return true
+    }
+  }
+  </script>
+</head>
+<body>
+  <div class="background-blur"></div>
+
+  <div class="container">
+    <h2>Welcome to BrandHub</h2>
+
+    <form action="/usersignup" method="POST" onsubmit="return validate()">
+      <div class="input-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+      </div>
+
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Create a password" required>
+      </div>
+
+      <button type="submit" class="btn">Sign Up</button>
+    </form>
+
+    <p class="terms">
+      By signing up, signing in, or continuing, I agree to the 
+      <u><a href="/terms">BrandHub Terms of Use</a></u> and acknowledge the 
+      <u><a href="/terms">BrandHub Privacy Policy</a></u>.
+    </p>
+
+    <p>Already have an account? <a href="/usersignin" class="signin-link">Sign in</a></p>
+  </div>
+</body>
+</html>
