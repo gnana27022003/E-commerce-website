@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TVs & Appliances</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/homepage.css">
+    <link rel="stylesheet" href="../css/products.css">
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="flipkart-header">
+    <div class="header-container">
+
+        <!-- LOGO -->
+        <div class="logo-section">
+            <a href="home.html">
+                <img src="../images/logo.png" class="logo-img" alt="logo">
+            </a>
+        </div>
+
+        <!-- SEARCH BAR -->
+        <div class="nav-search">
+            <input type="text" id="searchInput" placeholder="Search TVs & Appliances...">
+        </div>
+
+        <!-- NAV ACTIONS (NO NOTIFICATIONS) -->
+        <div class="nav-actions">
+
+            <a href="home.html" class="nav-item">
+                <i class="fa-solid fa-house"></i>
+                <span>Home</span>
+            </a>
+
+            <a href="login.html" class="nav-item">
+                <i class="fa-regular fa-user"></i>
+                <span>Login</span>
+            </a>
+
+            <a href="checkout.html" class="nav-item">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span>Cart</span>
+            </a>
+
+        </div>
+    </div>
+</header>
+
+<!-- ================= PAGE ================= -->
+<section class="products-page">
+    <div class="products-container">
+
+        <!-- ================= FILTERS ================= -->
+        <aside class="filters">
+            <h3>Filters</h3>
+
+            <div class="filter-block">
+                <h4>Category</h4>
+                <label><input type="checkbox"> Smart TVs</label>
+                <label><input type="checkbox"> Washing Machines</label>
+                <label><input type="checkbox"> Refrigerators</label>
+                <label><input type="checkbox"> Air Conditioners</label>
+            </div>
+
+            <div class="filter-block">
+                <h4>Brand</h4>
+                <label><input type="checkbox"> Samsung</label>
+                <label><input type="checkbox"> LG</label>
+                <label><input type="checkbox"> Sony</label>
+                <label><input type="checkbox"> Whirlpool</label>
+            </div>
+
+            <div class="filter-block">
+                <h4>Screen Size</h4>
+                <label><input type="checkbox"> 32"</label>
+                <label><input type="checkbox"> 43"</label>
+                <label><input type="checkbox"> 55"</label>
+                <label><input type="checkbox"> 65"</label>
+            </div>
+
+            <div class="filter-block">
+                <h4>Price</h4>
+                <label><input type="checkbox"> Under ₹30,000</label>
+                <label><input type="checkbox"> ₹30,000 – ₹60,000</label>
+                <label><input type="checkbox"> Above ₹60,000</label>
+            </div>
+        </aside>
+
+        <!-- ================= PRODUCTS GRID ================= -->
+        <main class="products-grid">
+
+            <div class="product-card">
+                <img src="../images/products/TV.png" alt="Smart TV">
+                <h4>Samsung 43” Smart TV</h4>
+                <p class="price">₹39,999</p>
+                <button>Add to Cart</button>
+            </div>
+
+            <div class="product-card">
+                <img src="../images/products/washingMachine.png" alt="Washing Machine">
+                <h4>LG Washing Machine</h4>
+                <p class="price">₹28,999</p>
+                <button>Add to Cart</button>
+            </div>
+
+        </main>
+
+    </div>
+</section>
+
+<script src="../js/appliances.js"></script>
+</body>
+</html>
+
