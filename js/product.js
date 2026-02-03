@@ -1,5 +1,5 @@
 /* ============================================
-   PRODUCT.JS - Product Detail Page Functionality
+   PRODUCT.JS - Product Detail Page Only
    ============================================ */
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initQuantityControls();
     initOptionButtons();
     initAddToCart();
+    initImageZoom();
 });
 
 /* === IMAGE GALLERY === */
@@ -67,7 +68,7 @@ function initQuantityControls() {
                 quantityInput.value = currentValue + 1;
                 updatePriceDisplay();
             } else {
-                showNotification('Maximum 10 items allowed per order', 'error');
+                alert('Maximum 10 items allowed per order');
             }
         });
         
@@ -78,7 +79,7 @@ function initQuantityControls() {
                 this.value = 1;
             } else if (value > 10) {
                 this.value = 10;
-                showNotification('Maximum 10 items allowed per order', 'error');
+                alert('Maximum 10 items allowed per order');
             }
             updatePriceDisplay();
         });
@@ -110,11 +111,6 @@ function initOptionButtons() {
                 const optionValue = this.textContent;
                 
                 console.log(`Selected ${optionType}: ${optionValue}`);
-                
-                // In a real application:
-                // 1. Update product price based on selection
-                // 2. Update product availability
-                // 3. Update product images if different variants
             });
         });
     });
@@ -127,7 +123,6 @@ function initAddToCart() {
     
     if (addToCartBtn) {
         addToCartBtn.addEventListener('click', function(e) {
-            // Prevent default link behavior temporarily
             e.preventDefault();
             
             // Get selected options
@@ -141,23 +136,12 @@ function initAddToCart() {
                 quantity: quantity
             });
             
-            // Add to cart (using main.js function)
-            const product = {
-                id: Date.now(), // In real app, use actual product ID
-                name: document.querySelector('.product-info h1')?.textContent || 'Product',
-                price: 1199.00,
-                image: document.getElementById('main-image')?.src || '',
-                color: selectedColor,
-                storage: selectedStorage,
-                quantity: parseInt(quantity)
-            };
+            alert('Product added to cart!');
             
-            addToCart(product);
-            
-            // After showing notification, navigate to checkout
+            // Navigate to checkout after showing alert
             setTimeout(() => {
                 window.location.href = 'checkout.html';
-            }, 1000);
+            }, 500);
         });
     }
     
@@ -165,7 +149,6 @@ function initAddToCart() {
         buyNowBtn.addEventListener('click', function(e) {
             e.preventDefault();
             
-            // Same as add to cart but immediately go to checkout
             const selectedColor = document.querySelector('.option-group:nth-child(1) .option-btn.active')?.textContent || 'Not selected';
             const selectedStorage = document.querySelector('.option-group:nth-child(2) .option-btn.active')?.textContent || 'Not selected';
             const quantity = document.getElementById('quantity')?.value || 1;
@@ -176,7 +159,7 @@ function initAddToCart() {
                 quantity: quantity
             });
             
-            showNotification('Proceeding to checkout...', 'success');
+            alert('Proceeding to checkout...');
             
             setTimeout(() => {
                 window.location.href = 'checkout.html';
@@ -189,15 +172,14 @@ function initAddToCart() {
 const writeReviewBtn = document.querySelector('.btn-write-review');
 if (writeReviewBtn) {
     writeReviewBtn.addEventListener('click', function() {
-        // Create review form popup
-        const reviewForm = prompt('Write your review (this is a demo - in production, use a proper modal):');
-        if (reviewForm) {
-            showNotification('Thank you for your review!', 'success');
+        const reviewText = prompt('Write your review:');
+        if (reviewText) {
+            alert('Thank you for your review!');
         }
     });
 }
 
-/* === IMAGE ZOOM (OPTIONAL ENHANCEMENT) === */
+/* === IMAGE ZOOM === */
 function initImageZoom() {
     const mainImage = document.getElementById('main-image');
     
@@ -235,6 +217,3 @@ function initImageZoom() {
         mainImage.style.cursor = 'zoom-in';
     }
 }
-
-// Initialize image zoom
-initImageZoom();
