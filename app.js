@@ -51,5 +51,5 @@ app.use(oroute)
 app.use(uroute)
 
 app.listen(3008, ()=>{
-    console.log("Server running at http://localhost:3008/home")
+    console.log("Server running at http://localhost:3008/")
 })

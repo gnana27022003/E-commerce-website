@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Product Details</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Segoe UI;
+  background:#F2F0EF;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
+
+.container {
+  width:520px;
+  background:#fff;
+  padding:30px;
+  border-radius:16px;
+  box-shadow:0 5px 20px #351E10;
+}
+
+h2 {
+  color:#351E10;
+  text-align:center;
+  margin-bottom:25px;
+}
+
+label {
+  font-weight:bold;
+  margin-top:12px;
+  display:block;
+  color:#351E10;
+}
+
+input, select, textarea {
+  width:100%;
+  padding:12px;
+  margin-top:6px;
+  margin-bottom:15px;
+  border-radius:10px;
+  border:1px solid #ccc;
+  font-size:15px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+input[readonly], textarea[readonly], select:disabled {
+  background:#eee;
+}
+
+/* IMAGE GRID */
+.images {
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:15px;
+}
+
+.image-box {
+  position:relative;
+  width:90px;
+  height:90px;
+}
+
+.image-box img {
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:10px;
+  border:1px solid #ccc;
+}
+
+/* REMOVE IMAGE BUTTON */
+.remove-img {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+
+  width: 20px;
+  height: 20px;
+
+  background: #e63946;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 13px;
+  font-weight: bold;
+  line-height: 1;
+
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+  z-index: 2;
+}
+
+.remove-img:hover {
+  background: #c1121f;
+  transform: scale(1.1);
+}
+
+
+/* BUTTONS */
+.buttons {
+  display:flex;
+  gap:12px;
+  justify-content:center;
+  margin-top:20px;
+}
+
+button {
+  padding:10px 22px;
+  border:none;
+  border-radius:50px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.edit { background:#351E10; color:#fff; }
+.save { background:green; color:#fff; display:none; }
+.delete { background:red; color:#fff; width:100%; margin-top:15px; }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h2>Product Details</h2>
+
+<form action="/sproduct/update/<%= product.productId %>" method="POST" enctype="multipart/form-data">
+
+<label>Product Name</label>
+<input type="text" name="productName" value="<%= product.productName %>" readonly>
+
+<label>Details</label>
+<textarea name="productDetails" readonly><%= product.productDetails %></textarea>
+
+<label>Stock</label>
+<input type="number" name="stock" value="<%= product.stock %>" readonly>
+
+<label>Price</label>
+<input type="number" name="price" value="<%= product.price %>" readonly>
+
+<label>Category</label>
+<select name="category" disabled>
+  <% ['clothes','electronics','accessories','food','appliances','books'].forEach(c => { %>
+    <option value="<%= c %>" <%= product.category === c ? 'selected' : '' %>><%= c %></option>
+  <% }) %>
+</select>
+
+<label>Status</label>
+<select name="productStatus" disabled>
+  <option value="available" <%= product.productStatus==='available'?'selected':'' %>>Available</option>
+  <option value="unavailable" <%= product.productStatus==='unavailable'?'selected':'' %>>Unavailable</option>
+</select>
+
+<label>Images</label>
+<div class="images">
+  <% product.productImages.forEach(img => { %>
+    <div class="image-box">
+      <img src="/uploads/products/<%= img.filename %>">
+      <button
+        type="button"
+        class="remove-img"
+        onclick="markForDelete(this, '<%= img.filename %>')">×</button>
+    </div>
+  <% }) %>
+</div>
+
+<!-- hidden input to send deleted images -->
+<input type="hidden" name="deletedImages" id="deletedImages">
+
+<label>Add Images</label>
+<input type="file" name="productImages" multiple disabled>
+
+
+<div class="buttons">
+  <button type="button" class="edit" onclick="enableEdit()">Edit</button>
+  <button type="submit" class="save">Save</button>
+</div>
+
+</form>
+
+<form action="/product/delete/<%= product._id %>" method="POST">
+  <button class="delete">Delete Product</button>
+</form>
+</div>
+
+<script>
+let deleted = [];
+
+function enableEdit(){
+  document.querySelectorAll('input, textarea').forEach(i => i.removeAttribute('readonly'));
+  document.querySelectorAll('select, input[type=file]').forEach(i => i.disabled = false);
+
+  document.querySelectorAll('.remove-img').forEach(b => b.style.display='block');
+
+  document.querySelector('.save').style.display='inline-block';
+}
+
+function markForDelete(btn, filename){
+  deleted.push(filename);
+  document.getElementById('deletedImages').value = deleted.join(',');
+  btn.parentElement.style.display = 'none';
+}
+</script>
+
+</body>
+</html>

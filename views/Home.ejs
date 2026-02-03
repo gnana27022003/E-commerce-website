@@ -6,8 +6,7 @@
     <title>E-Commerce Home</title>
 
     <!-- Font Awesome for icons -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <link rel="stylesheet" href="/homepage.css">
 </head>
@@ -19,7 +18,7 @@
 
         <!-- LOGO -->
         <div class="logo-section">
-            <img src="images/logo.png" class="logo-img" alt="logo">
+            <img src="/images/" class="logo-img" alt="logo">
         </div>
 
         <!-- NAV ACTIONS -->
@@ -70,11 +69,11 @@
     <div class="page-section home-card">
         <nav class="category-nav">
             <div class="main-container category-container">
-                <a href="products.html" class="category-item"><img src="../images/categories/mobileTablet.jpg"><span>Mobiles</span></a>
-                <a href="fashion.html" class="category-item"><img src="../images/categories/fashionProduct.jpg"><span>Fashion</span></a>
-                <a href="beauty.html" class="category-item"><img src="../images/categories/BeautyProduct.jpg"><span>Beauty</span></a>
-                <a href="electronics.html" class="category-item"><img src="../images/categories/electronicsProduct.jpg"><span>Electronics</span></a>
-                <a href="tvAppliances.html" class="category-item"><img src="../images/categories/tv.jpg"><span>TVs & Appliances</span></a>
+                <a href="products.html" class="category-item"><img src="/categories/mobileTablet.jpg"><span>Mobiles</span></a>
+                <a href="fashion.html" class="category-item"><img src="/categories/fashionProduct.jpg"><span>Fashion</span></a>
+                <a href="beauty.html" class="category-item"><img src="/categories/BeautyProduct.jpg"><span>Beauty</span></a>
+                <a href="electronics.html" class="category-item"><img src="/categories/electronicsProduct.jpg"><span>Electronics</span></a>
+                <a href="tvAppliances.html" class="category-item"><img src="/categories/tv.jpg"><span>TVs & Appliances</span></a>
             </div>
         </nav>
     </div>
@@ -87,17 +86,17 @@
                     <div class="slider-track">
                         <!-- 1st banner → Fashion page -->
                         <div class="slide" data-link="fashion.html">
-                            <img src="../images/banners/Banner1.png" alt="Fashion Banner">
+                            <img src="/banners/Banner1.png" alt="Fashion Banner">
                         </div>
 
                         <!-- 2nd banner → Mobiles page -->
                         <div class="slide" data-link="mobiles.html">
-                            <img src="../images/banners/Banner2.png" alt="Mobiles Banner">
+                            <img src="/banners/Banner2.png" alt="Mobiles Banner">
                         </div>
 
                         <!-- 3rd banner → Fashion page -->
                         <div class="slide" data-link="fashion.html">
-                            <img src="../images/banners/Banner3.png" alt="Fashion Banner">
+                            <img src="/banners/Banner3.png" alt="Fashion Banner">
                         </div>
                     </div>
                     <button class="slider-btn prev-btn" onclick="changeSlide(-1)">❮</button>
@@ -117,38 +116,18 @@
                 </div>
 
                 <div class="products-carousel">
-
-                    <!-- iPhone (unchanged) -->
+                    <% products.forEach(product=>{%>
+                    
                     <div class="product-item">
-                        <img src="../images/products/Iphone15.png">
-                        <h3>iPhone 15 Pro</h3>
-                        <p class="discount">₹79,999</p>
+                        <% if(product.productImages && product.productImages.length>0){%>
+                        <img src="/uploads/products/<%= product.productImages[0].filename%>" alt="product images">
+                        <%} else{%>
+                            <img src="" alt="no image found">
+                        <%}%>
+                        <h3><%= product.productName %></h3>
+                        <p class="discount">₹<%= product.price %></p>
                     </div>
-
-                    <!-- Samsung (unchanged) -->
-                    <div class="product-item">
-                        <img src="../images/products/samsung.png">
-                        <h3>Galaxy S20 Ultra</h3>
-                        <p class="discount">₹69,999</p>
-                    </div>
-
-                    <!-- Laptops → Electronics page -->
-                    <a href="electronics.html" class="product-link">
-                        <div class="product-item">
-                            <img src="../images/products/laptop.png">
-                            <h3>Laptops</h3>
-                            <p class="discount">Up to 40% Off</p>
-                        </div>
-                    </a>
-
-                    <!-- Smart TVs → TVs & Appliances page -->
-                    <a href="tvAppliances.html" class="product-link">
-                        <div class="product-item">
-                            <img src="../images/categories/tv.jpg">
-                            <h3>Smart TVs</h3>
-                            <p class="discount">From ₹10,999</p>
-                        </div>
-                    </a>
+                   <%})%>
 
                 </div>
 
@@ -160,7 +139,7 @@
     <div class="page-section home-card">
     <section class="fashion-deals-section">
         <div class="main-container">
-            <h2 class="fashion-heading">Fashion’s Top Deals</h2>
+            <h2 class="fashion-heading">Fashion's Top Deals</h2>
 
             <div class="fashion-deals-container">
 
@@ -170,7 +149,7 @@
                     <a href="fashion.html" class="fashion-link">
                         <div class="fashion-card">
                             <div class="fashion-img">
-                                <img src="../images/products/Shoes.jpg" alt="Shoes">
+                                <img src="/products/Shoes.jpg" alt="Shoes">
                             </div>
                             <div class="fashion-info">
                                 <h4>Shoes</h4>
@@ -182,7 +161,7 @@
                     <a href="fashion.html" class="fashion-link">
                         <div class="fashion-card">
                             <div class="fashion-img">
-                                <img src="../images/products/Kurti.jpg" alt="Women's Kurti">
+                                <img src="/products/Kurti.jpg" alt="Women's Kurti">
                             </div>
                             <div class="fashion-info">
                                 <h4>Women's Kurti</h4>
@@ -201,7 +180,7 @@
                             <p>with Latest & Trendy Choices</p>
                             <button>Shop Now →</button>
                         </div>
-                        <img src="../images/banners/fashionBanner.png" alt="Fashion Banner">
+                        <img src="/banners/fashionBanner.png" alt="Fashion Banner">
                     </div>
                 </a>
 

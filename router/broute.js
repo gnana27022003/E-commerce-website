@@ -1,10 +1,13 @@
 const express = require('express')
 const broute = express.Router()
+let productmodel = require('../model/productmodel')
 
 broute.get('/', async(req,res) => {
-    res.render('Home', {
+    const products = await productmodel.find();
+    res.render('home', {
     loggedIn: req.session.loggedIn || false,
-    user: req.session.user || null
+    user: req.session.user || null,
+    products
 });
 
 })

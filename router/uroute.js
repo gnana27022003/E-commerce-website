@@ -55,6 +55,7 @@ uroute.post('/usersignin',async(req,res)=>{
     
     const result = await validateUser(data);
     req.session.user=result.user;
+    req.session.email=req.body.email;
     if (result.success) {
         req.session.loggedIn = true;
         console.log(result.user)

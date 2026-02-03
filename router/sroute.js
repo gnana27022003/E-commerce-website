@@ -25,14 +25,14 @@ sroute.post('/sellerinfo', async (req, res) => {
 });
 
 sroute.get('/home', async (req, res) => {
-    const seller = await sellermodel.findOne(req.session.email);
+    const seller = await sellermodel.findOne({ email: req.session.email });
     const products = await productmodel.find();
     res.render('dashboard/shome', { seller, products })
 })
 
 
 sroute.get('/addprod', async(req,res)=>{
-    const seller = await sellermodel.findOne(req.session.email);
+    const seller = await sellermodel.findOne({email:req.session.email});
     res.render('dashboard/addprod', {seller})
 })
 
@@ -67,6 +67,24 @@ sroute.post(
   }
 );
 
+sroute.get('/profile',async(req,res)=>{
+    const seller = await sellermodel.findOne({email:req.session.email});
+    res.render('dashboard/profile',{seller})
+})
 
+
+sroute.get('/sproduct/:id',async(req,res)=>{
+    const product=await productmodel.findOne({productId:req.params.id})
+    if(!product){
+        return res.status(404).send('product not found');
+    }
+    res.render('dashboard/product',{product})
+})
+
+
+//sroute.post('/sproduct/update/:id',async(req,res)=>{
+  //  const prod=await productmodel.findOne({productId:req.params.id})
+
+//})
 
 module.exports = sroute;
