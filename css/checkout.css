@@ -1,0 +1,1014 @@
+/* ============================================
+   FLIPKART CHECKOUT PAGE - EXACT DESIGN
+============================================ */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Roboto, Arial, sans-serif;
+    background-color: #f1f3f6;
+    color: #212121;
+}
+
+/* ========== HEADER ========== */
+.flipkart-header {
+    background: #448ed8;
+    border-bottom: 1px solid #d6e4ff;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-container {
+    max-width: 1248px;
+    margin: 0 auto;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 40px;
+}
+
+.logo-section {
+    min-width: 137px;
+}
+
+.logo-img {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+}
+
+/* Checkout Steps Header */
+.checkout-steps-header {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+/* ========== CHECKOUT STEPS INDICATOR (BELOW HEADER) ========== */
+.checkout-steps-indicator {
+    background: #fff;
+    border-bottom: 1px solid #f0f0f0;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 64px;
+    z-index: 999;
+}
+
+.steps-indicator-container {
+    max-width: 1248px;
+    margin: 0 auto;
+    padding: 20px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.steps-indicator-container .secure-badge {
+    margin-left: auto;
+}
+
+.step-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #212121;
+    opacity: 0.4;
+}
+
+.step-item.active {
+    opacity: 1;
+    color: #2874f0;
+}
+
+.step-number {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    color: #878787;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.step-item.active .step-number {
+    background: #2874f0;
+    color: #fff;
+}
+
+.step-label {
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.step-divider {
+    width: 60px;
+    height: 2px;
+    background: #e0e0e0;
+}
+
+.step-item.active ~ .step-divider {
+    background: #e0e0e0;
+}
+
+.secure-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #2874f0;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: auto;
+}
+
+.secure-badge i {
+    font-size: 16px;
+}
+
+/* ========== CHECKOUT WRAPPER ========== */
+.checkout-wrapper {
+    background: #f1f3f6;
+    padding: 16px 0;
+    min-height: calc(100vh - 64px);
+}
+
+.checkout-container {
+    max-width: 1248px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 16px;
+    padding: 0 16px;
+}
+
+/* ========== CHECKOUT STEPS (LEFT) ========== */
+.checkout-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.checkout-step {
+    background: #fff;
+    border-radius: 2px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+}
+
+/* Step Header */
+.step-header {
+    padding: 20px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f5f5f5;
+    cursor: pointer;
+}
+
+.step-header.active {
+    background: #2874f0;
+    color: #fff;
+}
+
+.step-header.completed {
+    background: #fff;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.step-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.step-num {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #fff;
+    color: #878787;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.step-header.active .step-num {
+    background: #fff;
+    color: #2874f0;
+}
+
+.step-header.completed .step-num {
+    background: #2874f0;
+    color: #fff;
+}
+
+.step-title {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.step-check {
+    color: #2874f0;
+    font-size: 14px;
+    display: none;
+}
+
+.step-header.completed .step-check {
+    display: block;
+}
+
+.change-btn {
+    background: transparent;
+    border: none;
+    color: #2874f0;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 6px 12px;
+}
+
+.change-btn:hover {
+    text-decoration: underline;
+}
+
+/* Step Content */
+.step-content {
+    padding: 24px;
+    display: none;
+}
+
+.step-content.active {
+    display: block;
+}
+
+/* ========== LOGIN STEP ========== */
+.login-info {
+    padding: 12px 0;
+}
+
+.login-info p {
+    font-size: 14px;
+    color: #212121;
+}
+
+.login-info strong {
+    font-weight: 600;
+}
+
+/* ========== ADDRESS STEP ========== */
+.saved-addresses {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.address-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 16px;
+    position: relative;
+}
+
+.address-card.selected {
+    border: 2px solid #2874f0;
+    background: #f8f9ff;
+}
+
+.address-radio {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.address-radio input[type="radio"] {
+    margin-top: 4px;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.address-details {
+    flex: 1;
+}
+
+.address-type-badge {
+    display: inline-block;
+    background: #f0f0f0;
+    padding: 4px 10px;
+    border-radius: 2px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #878787;
+    margin-bottom: 8px;
+}
+
+.address-name {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.address-phone {
+    font-size: 13px;
+    color: #878787;
+    margin-bottom: 8px;
+}
+
+.address-text {
+    font-size: 13px;
+    color: #212121;
+    line-height: 1.6;
+}
+
+.deliver-here-btn {
+    margin-top: 16px;
+    background: #ff9f00;
+    color: #fff;
+    border: none;
+    padding: 12px 30px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 2px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.deliver-here-btn:hover {
+    background: #e68a00;
+}
+
+.edit-address-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: transparent;
+    border: none;
+    color: #2874f0;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.edit-address-btn:hover {
+    text-decoration: underline;
+}
+
+/* Add Address Button */
+.add-address-btn-wrapper {
+    margin-top: 16px;
+}
+
+.add-address-btn {
+    background: transparent;
+    border: 1px dashed #2874f0;
+    color: #2874f0;
+    padding: 16px;
+    width: 100%;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.add-address-btn:hover {
+    background: #f8f9ff;
+}
+
+/* Address Form */
+.address-form-wrapper {
+    margin-top: 20px;
+    padding: 24px;
+    background: #fafafa;
+    border-radius: 4px;
+}
+
+.address-form-wrapper h3 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #212121;
+}
+
+#address-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+#address-form input,
+#address-form textarea {
+    padding: 12px;
+    border: 1px solid #c2c2c2;
+    border-radius: 2px;
+    font-size: 14px;
+    font-family: Roboto, Arial, sans-serif;
+}
+
+#address-form input:focus,
+#address-form textarea:focus {
+    outline: none;
+    border-color: #2874f0;
+}
+
+#address-form textarea {
+    resize: vertical;
+    min-height: 80px;
+    grid-column: 1 / -1;
+}
+
+.address-type {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.address-type label:first-child {
+    font-size: 14px;
+    font-weight: 600;
+    margin-right: 10px;
+}
+
+.address-type label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.address-type input[type="radio"] {
+    width: 16px;
+    height: 16px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 8px;
+}
+
+.save-btn {
+    background: #ff9f00;
+    color: #fff;
+    border: none;
+    padding: 14px 32px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 2px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.save-btn:hover {
+    background: #e68a00;
+}
+
+.cancel-btn {
+    background: transparent;
+    color: #2874f0;
+    border: 1px solid #2874f0;
+    padding: 14px 32px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+.cancel-btn:hover {
+    background: #f8f9ff;
+}
+
+/* ========== ORDER SUMMARY ========== */
+.order-items {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+.order-item {
+    display: flex;
+    gap: 16px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.order-item:last-child {
+    border-bottom: none;
+}
+
+.item-image {
+    width: 112px;
+    height: 112px;
+    object-fit: contain;
+    border: 1px solid #f0f0f0;
+    border-radius: 2px;
+}
+
+.item-details {
+    flex: 1;
+}
+
+.item-name {
+    font-size: 14px;
+    color: #212121;
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+
+.item-variant {
+    font-size: 13px;
+    color: #878787;
+    margin-bottom: 8px;
+}
+
+.item-seller {
+    font-size: 12px;
+    color: #878787;
+    margin-bottom: 12px;
+}
+
+.seller-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 2px;
+}
+
+.item-price {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.current-price {
+    font-size: 16px;
+    font-weight: 600;
+    color: #212121;
+}
+
+.original-price {
+    font-size: 14px;
+    color: #878787;
+    text-decoration: line-through;
+}
+
+.discount {
+    font-size: 13px;
+    color: #388e3c;
+    font-weight: 600;
+}
+
+.coins-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 12px;
+    color: #878787;
+}
+
+.coins-badge i {
+    color: #ff9f00;
+}
+
+.item-protect-fee {
+    font-size: 12px;
+    color: #212121;
+    margin-top: 8px;
+}
+
+.item-protect-fee i {
+    font-size: 10px;
+    color: #878787;
+}
+
+.item-emi {
+    font-size: 12px;
+    color: #212121;
+    margin-top: 4px;
+}
+
+.delivery-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.delivery-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.delivery-option input[type="radio"] {
+    width: 16px;
+    height: 16px;
+}
+
+.delivery-option label {
+    font-size: 13px;
+    color: #212121;
+    cursor: pointer;
+}
+
+.delivery-highlight {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: #fff8e1;
+    border-radius: 2px;
+}
+
+.delivery-highlight i {
+    color: #ff9f00;
+    font-size: 16px;
+}
+
+.delivery-highlight-text {
+    font-size: 12px;
+    color: #212121;
+}
+
+.delivery-highlight-text strong {
+    font-weight: 600;
+}
+
+.delivery-highlight-text a {
+    color: #2874f0;
+    text-decoration: none;
+}
+
+.delivery-highlight-text a:hover {
+    text-decoration: underline;
+}
+
+.item-quantity {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    border: 1px solid #c2c2c2;
+    border-radius: 2px;
+}
+
+.qty-btn {
+    background: transparent;
+    border: none;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #878787;
+}
+
+.qty-btn:hover {
+    background: #f0f0f0;
+}
+
+.qty-value {
+    width: 40px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    border-left: 1px solid #c2c2c2;
+    border-right: 1px solid #c2c2c2;
+}
+
+.remove-btn {
+    background: transparent;
+    border: none;
+    color: #212121;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.remove-btn:hover {
+    color: #2874f0;
+}
+
+/* GST Invoice */
+.gst-invoice {
+    padding: 16px 0;
+    border-top: 1px solid #f0f0f0;
+}
+
+.gst-invoice label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #212121;
+}
+
+.gst-invoice input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+/* Email Input */
+.email-input-wrapper {
+    padding: 16px 0;
+}
+
+.email-input-wrapper label {
+    display: block;
+    font-size: 13px;
+    color: #878787;
+    margin-bottom: 8px;
+}
+
+.email-input-wrapper input {
+    width: 100%;
+    max-width: 400px;
+    padding: 12px;
+    border: 1px solid #c2c2c2;
+    border-radius: 2px;
+    font-size: 14px;
+}
+
+.email-input-wrapper input:focus {
+    outline: none;
+    border-color: #2874f0;
+}
+
+/* Continue Button */
+.continue-btn {
+    background: #ff9f00;
+    color: #fff;
+    border: none;
+    padding: 14px 40px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 2px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.continue-btn:hover {
+    background: #e68a00;
+}
+
+/* ========== PRICE DETAILS SIDEBAR (RIGHT) ========== */
+.price-details-sidebar {
+    position: sticky;
+    top: 80px;
+    height: fit-content;
+}
+
+.price-details-card {
+    background: #fff;
+    border-radius: 2px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08);
+    padding: 24px;
+}
+
+.price-details-card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #878787;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    font-size: 14px;
+    color: #212121;
+}
+
+.price-row.expandable {
+    cursor: pointer;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.price-row.expandable i {
+    font-size: 12px;
+    transition: transform 0.3s;
+}
+
+.price-row.expandable.collapsed i {
+    transform: rotate(180deg);
+}
+
+.fees-breakdown {
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.fees-breakdown.hidden {
+    display: none;
+}
+
+.sub-row {
+    padding-left: 20px;
+    font-size: 13px;
+    color: #878787;
+}
+
+.price-row.total {
+    padding-top: 16px;
+    margin-top: 16px;
+    border-top: 1px solid #f0f0f0;
+    font-size: 16px;
+}
+
+.savings-badge {
+    background: #e8f5e9;
+    color: #388e3c;
+    padding: 12px;
+    border-radius: 2px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 16px;
+}
+
+.savings-badge span {
+    color: #388e3c;
+}
+
+.secure-payment {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.secure-payment i {
+    font-size: 24px;
+    color: #878787;
+}
+
+.secure-payment p {
+    font-size: 12px;
+    color: #878787;
+    line-height: 1.6;
+}
+
+.terms-text {
+    font-size: 11px;
+    color: #878787;
+    line-height: 1.6;
+    margin-top: 16px;
+}
+
+.terms-text a {
+    color: #2874f0;
+    text-decoration: none;
+}
+
+.terms-text a:hover {
+    text-decoration: underline;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1024px) {
+    .checkout-container {
+        grid-template-columns: 1fr;
+    }
+
+    .price-details-sidebar {
+        position: static;
+        order: -1;
+    }
+
+    .checkout-steps-indicator {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-container {
+        height: 56px;
+        gap: 20px;
+    }
+
+    .logo-img {
+        height: 32px;
+    }
+
+    .step-label {
+        display: none;
+    }
+
+    .checkout-container {
+        padding: 0 8px;
+    }
+
+    .step-content {
+        padding: 16px;
+    }
+
+    .price-details-card {
+        padding: 16px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .item-image {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+/* ========== ADDRESS STEP TICK & CHANGE BUTTON ========== */
+.step-tick {
+    display: none;
+    color: #2874f0;
+    font-weight: bold;
+    margin-left: 8px;
+    font-size: 14px;
+}
+
+.step-header.completed .step-tick {
+    display: inline;
+}
+
+.step-change-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: #2874f0;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 6px 12px;
+}
+
+.step-change-btn:hover {
+    text-decoration: underline;
+}
+
+.step-header.completed .step-change-btn {
+    display: inline-block;
+}
+h1, h2, h3, h4 {
+    font-weight: 500;
+}
+
+.step-title,
+.price-details-card h3 {
+    font-weight: 600;
+}
+
+p, span, label, input, button {
+    font-weight: 400;
+}
+button,
+input,
+textarea {
+    font-family: 'Roboto', Arial, sans-serif;
+}
+
+
+
+
+
