@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout - E-Commerce</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/checkout.css">
+</head>
+<body>
+
+<!-- ================= HEADER ================= -->
+<header class="flipkart-header">
+    <div class="header-container">
+        <!-- LOGO -->
+        <div class="logo-section">
+            <img src="../images/logo.png" class="logo-img" alt="logo">
+        </div>
+    </div>
+</header>
+
+<!-- ================= CHECKOUT STEPS INDICATOR (BELOW HEADER) ================= -->
+<div class="checkout-steps-indicator">
+    <div class="steps-indicator-container">
+        <div class="step-item active">
+            <span class="step-number">1</span>
+            <span class="step-label">LOGIN</span>
+        </div>
+        <div class="step-divider"></div>
+        <div class="step-item">
+            <span class="step-number">2</span>
+            <span class="step-label">DELIVERY ADDRESS</span>
+        </div>
+        <div class="step-divider"></div>
+        <div class="step-item">
+            <span class="step-number">3</span>
+            <span class="step-label">ORDER SUMMARY</span>
+        </div>
+        <div class="step-divider"></div>
+        <div class="step-item">
+            <span class="step-number">4</span>
+            <span class="step-label">PAYMENT</span>
+        </div>
+
+        <!-- SECURE BADGE -->
+        <div class="secure-badge">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>100% SECURE</span>
+        </div>
+    </div>
+</div>
+
+<!-- ================= CHECKOUT CONTAINER ================= -->
+<div class="checkout-wrapper">
+    <div class="checkout-container">
+        
+        <!-- LEFT COLUMN - CHECKOUT STEPS -->
+        <div class="checkout-steps">
+
+            <!-- ========== STEP 1: LOGIN ========== -->
+            <div class="checkout-step" id="step-login">
+                <div class="step-header completed" id="login-header">
+                    <div class="step-info">
+                        <span class="step-num">1</span>
+                        <span class="step-title">LOGIN</span>
+                        <i class="fa-solid fa-check step-check"></i>
+                    </div>
+                    <button class="change-btn" id="change-login-btn">CHANGE</button>
+                </div>
+                <div class="step-content" id="login-content" style="display: none;">
+                    <div class="login-info">
+                        <p><strong>Flipkart Customer</strong> +917411263306</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========== STEP 2: DELIVERY ADDRESS ========== -->
+            <div class="checkout-step" id="step-address">
+                <div class="step-header active" id="address-header">
+                    <div class="step-info">
+                        <span class="step-num">2</span>
+                        <span class="step-title">DELIVERY ADDRESS</span>
+                        <span class="step-tick" id="address-tick">✔</span>
+                    </div>
+                    <button class="step-change-btn" id="address-change-btn">CHANGE</button>
+                </div>
+                <div class="step-content active" id="address-content">
+                    
+                    <!-- Saved Addresses -->
+                    <div class="saved-addresses" id="saved-addresses">
+                        <!-- Addresses will be dynamically added here -->
+                    </div>
+
+                    <!-- Add New Address Button -->
+                    <div class="add-address-btn-wrapper">
+                        <button class="add-address-btn" id="add-address-btn">
+                            <i class="fa-solid fa-plus"></i>
+                            Add a new address
+                        </button>
+                    </div>
+
+                    <!-- Add Address Form (Hidden Initially) -->
+                    <div class="address-form-wrapper" id="address-form-wrapper" style="display: none;">
+                        <h3>ADD A NEW ADDRESS</h3>
+                        <form id="address-form">
+                            <div class="form-row">
+                                <input type="text" id="name" placeholder="Name" required>
+                                <input type="tel" id="phone" placeholder="10-digit mobile number" required>
+                            </div>
+                            <div class="form-row">
+                                <input type="text" id="pincode" placeholder="Pincode" required>
+                                <input type="text" id="locality" placeholder="Locality" required>
+                            </div>
+                            <textarea id="address" placeholder="Address (Area and Street)" required></textarea>
+                            <div class="form-row">
+                                <input type="text" id="city" placeholder="City/District/Town" required>
+                                <input type="text" id="state" placeholder="State" required>
+                            </div>
+                            <div class="form-row">
+                                <input type="text" id="landmark" placeholder="Landmark (Optional)">
+                                <input type="tel" id="alt-phone" placeholder="Alternate Phone (Optional)">
+                            </div>
+                            <div class="address-type">
+                                <label>Address Type:</label>
+                                <label>
+                                    <input type="radio" name="address-type" value="home" checked>
+                                    <span>Home</span>
+                                </label>
+                                <label>
+                                    <input type="radio" name="address-type" value="work">
+                                    <span>Work</span>
+                                </label>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="save-btn">SAVE AND DELIVER HERE</button>
+                                <button type="button" class="cancel-btn" id="cancel-address-btn">CANCEL</button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ========== STEP 3: ORDER SUMMARY ========== -->
+            <div class="checkout-step" id="step-order">
+                <div class="step-header" id="order-header">
+                    <div class="step-info">
+                        <span class="step-num">3</span>
+                        <span class="step-title">ORDER SUMMARY</span>
+                    </div>
+                </div>
+                <div class="step-content" id="order-content" style="display: none;">
+                    
+                    <!-- Order Items -->
+                    <div class="order-items" id="order-items">
+                        <!-- Items will be dynamically added here -->
+                    </div>
+
+                    <!-- GST Invoice -->
+                    <div class="gst-invoice">
+                        <label>
+                            <input type="checkbox" id="gst-checkbox">
+                            <span>Use GST Invoice</span>
+                        </label>
+                    </div>
+
+                    <!-- Email Input -->
+                    <div class="email-input-wrapper">
+                        <label>Order confirmation email will be sent to</label>
+                        <input type="email" id="order-email" placeholder="Enter your email ID">
+                    </div>
+
+                    <!-- Continue Button -->
+                    <button class="continue-btn" id="continue-btn">CONTINUE</button>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN - PRICE DETAILS -->
+        <div class="price-details-sidebar">
+            <div class="price-details-card">
+                <h3>Price Details</h3>
+                
+                <div class="price-row">
+                    <span>Price (<span id="item-count">2</span> items)</span>
+                    <span id="price-total">₹20,090</span>
+                </div>
+
+                <div class="price-row expandable" id="fees-toggle">
+                    <span>Fees <i class="fa-solid fa-chevron-up"></i></span>
+                </div>
+
+                <div class="fees-breakdown" id="fees-breakdown">
+                    <div class="price-row sub-row">
+                        <span>Protect Promise Fee</span>
+                        <span id="promise-fee">₹99</span>
+                    </div>
+                </div>
+
+                <div class="price-row total">
+                    <span><strong>Total Payable</strong></span>
+                    <span id="total-payable"><strong>₹18,788</strong></span>
+                </div>
+
+                <div class="savings-badge">
+                    Your Total Savings on this order <span id="total-savings">₹1,302</span>
+                </div>
+
+                <div class="secure-payment">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <p>Safe and Secure Payments. Easy returns.<br>100% Authentic products.</p>
+                </div>
+
+                <div class="terms-text">
+                    By continuing with the order, you confirm that you are above 18 years of age, and you agree to the Flipkart's 
+                    <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="../js/checkout.js"></script>
+</body>
+</html>
