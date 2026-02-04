@@ -1,0 +1,617 @@
+/* ============================================
+   CHECKOUT/CART PAGE STYLES - FLIPKART STYLE
+   ============================================ */
+
+/* === PAGE WRAPPER === */
+.cart-main {
+    width: 100%;
+    background: #f1f3f6;
+    padding: 6px 10px;
+    min-height: calc(100vh - 200px);
+}
+
+/* === CART STEPS === */
+.cart-steps {
+    max-width: 100%;
+    margin: 0 auto 12px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 6px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.step-number {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #e0e0e0;
+    color: #878787;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.step.active .step-number {
+    background: #2874f0;
+    color: #fff;
+}
+
+.step-label {
+    font-size: 14px;
+    color: #878787;
+    font-weight: 500;
+}
+
+.step.active .step-label {
+    color: #2874f0;
+    font-weight: 600;
+}
+
+.step-divider {
+    width: 60px;
+    height: 2px;
+    background: #e0e0e0;
+    margin: 0 16px;
+}
+
+/* === CART CONTAINER === */
+.cart-container {
+    max-width: 100%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 12px;
+}
+
+/* === LEFT: CART ITEMS SECTION === */
+.cart-items-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Address Card */
+.address-card {
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.08);
+    padding: 16px 20px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-header h3 {
+    font-size: 14px;
+    font-weight: 500;
+    color: #212121;
+    margin: 0;
+}
+
+.btn-link {
+    background: none;
+    border: 1px solid #2874f0;
+    color: #2874f0;
+    padding: 8px 16px;
+    border-radius: 2px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-link:hover {
+    background: #2874f0;
+    color: #fff;
+}
+
+/* Cart Items List */
+.cart-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* Cart Item Card */
+.cart-item-card {
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.08);
+}
+
+.cart-item {
+    display: grid;
+    grid-template-columns: 112px 1fr;
+    gap: 20px;
+    padding: 20px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.item-image {
+    width: 112px;
+    height: 112px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.item-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.item-info h4 {
+    font-size: 16px;
+    font-weight: 400;
+    color: #212121;
+    margin: 0 0 6px 0;
+    line-height: 1.4;
+}
+
+.item-color {
+    font-size: 14px;
+    color: #878787;
+    margin: 4px 0;
+}
+
+.item-seller {
+    font-size: 14px;
+    color: #212121;
+    margin: 8px 0;
+}
+
+.assured-badge {
+    color: #2874f0;
+    font-weight: 600;
+}
+
+.item-pricing {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 12px 0 8px 0;
+}
+
+.item-price {
+    font-size: 18px;
+    font-weight: 600;
+    color: #212121;
+}
+
+.item-original-price {
+    font-size: 16px;
+    color: #878787;
+    text-decoration: line-through;
+}
+
+.item-discount {
+    font-size: 14px;
+    color: #388e3c;
+    font-weight: 500;
+}
+
+.savings-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    background: #388e3c;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 11px;
+}
+
+.delivery-date {
+    font-size: 14px;
+    color: #212121;
+    margin-top: 6px;
+}
+
+/* Addon Item */
+.addon-item {
+    display: grid;
+    grid-template-columns: 70px 1fr 140px;
+    gap: 16px;
+    padding: 16px 20px;
+    background: #fafafa;
+    margin: 0;
+    align-items: start;
+}
+
+.addon-image {
+    width: 70px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.addon-image img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.best-offer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background: #2874f0;
+    color: #fff;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    font-weight: 600;
+}
+
+.addon-info h5 {
+    font-size: 16px;
+    font-weight: 500;
+    color: #212121;
+    margin: 0 0 4px 0;
+}
+
+.addon-duration {
+    font-size: 14px;
+    color: #878787;
+    margin: 4px 0 8px 0;
+}
+
+.addon-pricing {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.addon-price {
+    font-size: 16px;
+    font-weight: 600;
+    color: #212121;
+}
+
+.addon-original {
+    font-size: 14px;
+    color: #878787;
+    text-decoration: line-through;
+}
+
+.addon-discount {
+    font-size: 14px;
+    color: #388e3c;
+    font-weight: 500;
+}
+
+.addon-desc {
+    font-size: 12px;
+    color: #212121;
+    line-height: 1.4;
+}
+
+.addon-desc a {
+    color: #2874f0;
+    text-decoration: none;
+}
+
+.addon-action {
+    display: flex;
+    align-items: flex-start;
+}
+
+.btn-add-addon {
+    background: #ff9f00;
+    color: #fff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 2px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+}
+
+.btn-add-addon:hover {
+    background: #e68a00;
+}
+
+/* Item Actions */
+.item-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 16px 20px;
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+.qty-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #c2c2c2;
+    background: #fff;
+    color: #212121;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.qty-btn:hover {
+    background: #f0f0f0;
+}
+
+.qty-value {
+    width: 46px;
+    height: 32px;
+    text-align: center;
+    border: none;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0 8px;
+    background: transparent;
+}
+
+.btn-save,
+.btn-remove {
+    background: none;
+    border: none;
+    color: #212121;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 8px;
+}
+
+.btn-save:hover,
+.btn-remove:hover {
+    color: #2874f0;
+}
+
+/* Place Order Section */
+.place-order-section {
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.08);
+    padding: 20px;
+    text-align: right;
+}
+
+.btn-place-order {
+    background: #fb641b;
+    color: #fff;
+    border: none;
+    padding: 16px 80px;
+    border-radius: 2px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.btn-place-order:hover {
+    background: #e85c0d;
+}
+
+/* === RIGHT: PRICE DETAILS === */
+.price-details-section {
+    height: fit-content;
+    position: sticky;
+    top: 80px;
+}
+
+.price-card {
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.08);
+    padding: 24px;
+    margin-bottom: 12px;
+}
+
+.price-card h3 {
+    font-size: 16px;
+    font-weight: 500;
+    color: #878787;
+    margin: 0 0 20px 0;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    font-size: 16px;
+    color: #212121;
+}
+
+.discount-amount {
+    color: #388e3c;
+    font-weight: 500;
+}
+
+.total-row {
+    padding-top: 16px;
+    border-top: 1px dashed #e0e0e0;
+    font-size: 18px;
+}
+
+.savings-message {
+    color: #388e3c;
+    font-size: 16px;
+    font-weight: 500;
+    margin-top: 16px;
+}
+
+/* Secure Badge */
+.secure-badge {
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.08);
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.secure-badge span:first-child {
+    font-size: 24px;
+}
+
+.secure-badge div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.secure-badge strong {
+    font-size: 14px;
+    color: #212121;
+}
+
+.secure-badge span:last-child {
+    font-size: 12px;
+    color: #878787;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 1024px) {
+    .cart-container {
+        grid-template-columns: 1fr 340px;
+    }
+}
+
+@media (max-width: 768px) {
+    .cart-container {
+        grid-template-columns: 1fr;
+    }
+
+    .price-details-section {
+        position: static;
+        order: -1;
+    }
+
+    .cart-steps {
+        gap: 8px;
+        padding: 16px;
+    }
+
+    .step-divider {
+        width: 40px;
+        margin: 0 8px;
+    }
+
+    .step-label {
+        font-size: 12px;
+    }
+
+    .cart-item {
+        grid-template-columns: 80px 1fr;
+        gap: 12px;
+    }
+
+    .item-image {
+        width: 80px;
+        height: 80px;
+    }
+
+    .addon-item {
+        grid-template-columns: 60px 1fr;
+        gap: 12px;
+    }
+
+    .addon-image {
+        width: 60px;
+        height: 60px;
+    }
+
+    .addon-action {
+        grid-column: 1 / -1;
+    }
+
+    .place-order-section {
+        text-align: center;
+    }
+
+    .btn-place-order {
+        width: 100%;
+        padding: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .cart-steps {
+        padding: 12px 8px;
+    }
+
+    .step-label {
+        display: none;
+    }
+
+    .step-divider {
+        width: 30px;
+        margin: 0 4px;
+    }
+
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .btn-link {
+        width: 100%;
+    }
+
+    .item-actions {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+}
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.nav-item i {
+    font-size: 16px;
+    color: #fff;
+}
+
+.nav-item:hover {
+    opacity: 0.9;
+}
+
+.nav-item.active {
+    font-weight: 600;
+}
+
