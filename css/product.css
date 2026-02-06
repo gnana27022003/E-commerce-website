@@ -33,6 +33,7 @@
 
 /* === PRODUCT CONTAINER === */
 .product-container {
+    
     max-width: 100%;
     margin: 0 auto;
     display: grid;
@@ -42,6 +43,7 @@
     padding: 30px;
     border-radius: 6px;
     box-shadow: 0 1px 1px rgba(0,0,0,0.08);
+    height: fit-content;
 }
 
 /* === PRODUCT IMAGES === */
@@ -201,6 +203,7 @@
 /* === ACTION BUTTONS (UPDATED) === */
 .action-buttons {
     display: flex;
+    margin-top: 20px;
     gap: 16px;
     margin-bottom: 30px;
 }
@@ -427,6 +430,7 @@
     transition: transform 0.3s, box-shadow 0.3s;
     cursor: pointer;
     border: 1px solid #e0e0e0;
+    
 }
 
 .related-products .product-card:hover {
@@ -468,7 +472,7 @@
     background-color: #2874f0;
     color: #fff;
     border: none;
-    border-radius: 2px;
+    border-radius: 5px;
     cursor: pointer;
     font-weight: 600;
 }
@@ -476,6 +480,17 @@
 .related-products .btn-view:hover {
     background-color: #1c5ebe;
 }
+
+.more-products {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 per row */
+    gap: 20px;
+    width: 100%;
+}
+
+
+
+
 
 /* === RESPONSIVE === */
 @media (max-width: 1024px) {

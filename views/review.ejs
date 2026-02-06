@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #F2F0EF;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 40px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0px 5px 20px #351E10;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 26px;
+            color: #351E10;
+            margin-bottom: 5px;
+        }
+
+        .review-container {
+            width: 100%;
+            padding: 30px 0;
+        }
+
+        .professional-name {
+            margin: 20px 0;
+            font-weight: bold;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .star {
+            font-size: 40px;
+            cursor: pointer;
+            color: #d8d8d8;
+            margin-right: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .star:hover, .star.active {
+            color:  #eb8b4e;
+        }
+
+        #review-stars {
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: center;
+        }
+        #postedBy{
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            width: 100%; /* Full width */
+            height: 40px; /* Increased height */
+            padding: 12px;
+            font-size: 15px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            margin-bottom: 15px;
+            transition: border-color 0.3s ease;
+
+        }
+        #postedBy:focus
+        {
+            border-color: #351E10;
+            outline: none;
+            box-shadow: 0 0 8px #351E10;
+
+        }
+        #name-label{
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: bold; 
+            font-size: 15px;
+            color: #351E10;
+            margin-bottom: 5px;
+            text-align: left;
+            display: block;
+
+        }
+
+        #description {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            width: 100%; /* Full width */
+            height: 100px; /* Increased height */
+            padding: 12px;
+            font-size: 15px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            
+            transition: border-color 0.3s ease;
+        }
+
+        #description:focus {
+            border-color: #351E10;
+            outline: none;
+            box-shadow: 0 0 8px #351E10;
+        }
+
+        #description-label{
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-weight: bold; 
+            font-size: 15px;
+            color: #351E10;
+            margin-bottom: 5px;
+            text-align: left;
+            display: block;
+        }
+
+        .error-message {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: red;
+            font-size: 14px;
+            display: none;
+            text-align: left;
+            margin-top: 5px;
+        }
+
+        #image-upload {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        #image-upload-label {
+            font-weight: bold; 
+            display: block;
+            font-size: 15px;
+            color: #351E10;
+            margin-bottom: 10px;
+        }
+
+        .upload-btn {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 1px dashed #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            justify-content: center;
+            background-color: #fff;
+            transition: background-color 0.3s;
+            font-size: 15px;
+            margin-bottom: 10px; 
+        }
+
+        .upload-btn:hover {
+            background-color: #f9f9f9;
+        }
+
+        .upload-icon {
+            font-size: 15px;
+            margin-right: 5px;
+            color: #351E10;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .confirmation {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #351E10;
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        #submit-button {
+            font-size: 18px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Reduced button text size */
+            padding: 8px 16px; /* Reduced padding for a smaller button */
+            margin: 20px auto; /* Space around and center the button */
+            display: block; /* Block element to make centering possible */
+            background-color: #eb8b4e; /* Button background color */
+            color: white; /* White text */
+            border: none; /* Remove default borders */
+            border-radius: 5px; /* Slightly rounded corners */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: auto; /* Make the button adjust to its content */
+            min-width: 150px; /* Set a minimum width */
+        }
+
+        #submit-button:hover { 
+            background-color: #351E10;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px;
+                width: 90%;
+            }
+
+            .input-group input, #description {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    
+    <form action="/review/<%= productId %>" method="post">
+    <div class="container">
+        <h2>Please review this professional</h2>
+        
+        <div class="review-container">
+            <div id="review-stars">
+                <span class="star" data-value="1">&#9733;</span>
+                <span class="star" data-value="2">&#9733;</span>
+                <span class="star" data-value="3">&#9733;</span>
+                <span class="star" data-value="4">&#9733;</span>
+                <span class="star" data-value="5">&#9733;</span>
+            </div>
+            <input type="hidden" id="rating" name="rating">
+            <label id="name-label" for="postedBy">Name</label>
+            <input type="text" id="postedBy" name="postedBy" placeholder="Enter your name">
+            <p id="error-message-name" class="error-message">Please enter a valid name (alphabets and spaces only).</p>
+
+            <label id="description-label" for="description">Description box</label>
+            <textarea id="description" name="description" placeholder="Your review helps others decide on the right pro for them. Please share your experiences with this professional."></textarea>
+            <p id="error-message-description" class="error-message">Please enter at least 5 words in the description.</p>
+            <p id="error-message-stars" class="error-message">Please select a rating.</p>
+            <p class="confirmation">
+                I confirm that this review complies with the HouseIn Review Policy, including that I do not work for, am not related to, and am not a competitor of this professional.
+            </p>
+
+            <button id="submit-button">Submit</button>
+        </div>
+    </div>
+</form>
+    <script>
+        const stars = document.querySelectorAll('.star');
+        let selectedRating = 0;
+
+        stars.forEach((star, index) => {
+            star.addEventListener('mouseover', () => {
+                highlightStars(index);
+            });
+
+            star.addEventListener('mouseout', () => {
+                resetStars();
+            });
+
+            star.addEventListener('click', () => {
+                // Set the selected rating to the clicked star's index + 1
+                selectedRating = index + 1;
+                document.getElementById('rating').value = selectedRating;
+                setActiveStars(selectedRating);
+            });
+        });
+
+        function highlightStars(index) {
+            stars.forEach((star, i) => {
+                if (i <= index) {
+                    star.classList.add('hover');
+                } else {
+                    star.classList.remove('hover');
+                }
+            });
+        }
+
+        function resetStars() {
+            stars.forEach((star, i) => {
+                star.classList.remove('hover');
+                if (i < selectedRating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        function setActiveStars(rating) {
+            stars.forEach((star, i) => {
+                // If the index is less than the selected rating, add 'active'
+                if (i < rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        document.getElementById('submit-button').addEventListener('click', (event) => {
+            const description = document.getElementById('description').value.trim();
+            const wordCount = description.split(/\s+/).filter(Boolean).length;
+            let isValid = true;
+
+            // Check if stars are selected
+            if (selectedRating === 0) {
+                document.getElementById('error-message-stars').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('error-message-stars').style.display = 'none';
+            }
+
+            // Check if the description has at least 5 words
+            if (wordCount < 5) {
+                document.getElementById('error-message-description').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('error-message-description').style.display = 'none';
+            }
+
+            if (isValid) {
+                alert('Review submitted successfully!');
+            }
+        });
+        document.getElementById('submit-button').addEventListener('click', () => {
+            const name = document.getElementById('postedBy').value.trim();
+            const description = document.getElementById('description').value.trim();
+            const wordCount = description.split(/\s+/).filter(Boolean).length;
+            const nameRegex = /^[A-Za-z\s]+$/;  // Regular expression for alphabets and spaces
+            let isValid = true;
+    
+            // Name validation
+            if (!name || !nameRegex.test(name)) {
+                document.getElementById('error-message-name').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('error-message-name').style.display = 'none';
+            }
+    
+            // Check if stars are selected
+            if (selectedRating === 0) {
+                document.getElementById('error-message-stars').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('error-message-stars').style.display = 'none';
+            }
+    
+            // Check if the description has at least 5 words
+            if (wordCount < 5) {
+                document.getElementById('error-message-description').style.display = 'block';
+                isValid = false;
+            } else {
+                document.getElementById('error-message-description').style.display = 'none';
+            }
+    
+            if (isValid) {
+                alert('Review submitted successfully!');
+            }
+        });
+    </script>
+</body>
+</html>

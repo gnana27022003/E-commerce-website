@@ -5,7 +5,10 @@ const productmodel = new mongoose.Schema({
     productName: { type: String, required: true },
     productDetails: String,
     stock: { type: Number, default: 0 },
+    sellerId:{ type: String, required: true},
     price:{type: Number, default: 0},
+    avgRating: { type: Number, default: 0 },
+    ratingCount: { type: Number, default: 0 },
     productImages: [{
     filename: { type: String },
     contentType: { type: String },
@@ -17,7 +20,7 @@ const productmodel = new mongoose.Schema({
     productStatus: { type: String, enum: ['available', 'unavailable'], default: 'available' },
     category: { 
         type: String, 
-        enum: ['clothes', 'electronics', 'accessories', 'food', 'appliances', 'books'], 
+        enum: ['clothes', 'electronics', 'beauty', 'mobiles', 'appliances'], 
         required: true 
     },
     createdAt: { type: Date, default: Date.now }

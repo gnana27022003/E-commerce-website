@@ -6,7 +6,7 @@ async function storeUserData(req,res) {
             password: req.session.password,
             name: req.body.name,
             phone:req.body.phone,
-            uniqueId: uuidv4()
+           userId: uuidv4()
             
         };
     console.log(req.body.name)

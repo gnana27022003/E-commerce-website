@@ -195,10 +195,7 @@ if (sortSelect) {
 function sortProducts(sortType) {
     showNotification(`Sorting products by ${sortType}...`, 'success');
     
-    // In a real application, you would:
-    // 1. Sort products array based on sortType
-    // 2. Re-render products grid
-    // 3. Or make API call with sort parameter
+    
 }
 
 /* === PRODUCT CARD INTERACTIONS === */

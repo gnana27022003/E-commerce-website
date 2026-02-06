@@ -155,7 +155,7 @@ button {
 
 <label>Category</label>
 <select name="category" disabled>
-  <% ['clothes','electronics','accessories','food','appliances','books'].forEach(c => { %>
+  <% ['clothes','electronics','beauty','appliances','mobiles'].forEach(c => { %>
     <option value="<%= c %>" <%= product.category === c ? 'selected' : '' %>><%= c %></option>
   <% }) %>
 </select>
@@ -182,7 +182,7 @@ button {
 <!-- hidden input to send deleted images -->
 <input type="hidden" name="deletedImages" id="deletedImages">
 
-<label>Add Images</label>
+<label>Replace Images</label>
 <input type="file" name="productImages" multiple disabled>
 
 
@@ -193,8 +193,8 @@ button {
 
 </form>
 
-<form action="/product/delete/<%= product._id %>" method="POST">
-  <button class="delete">Delete Product</button>
+<form action="/sproduct/delete/<%= product.productId %>" method="POST">
+  <button class="delete" type="submit">Delete Product</button>
 </form>
 </div>
 

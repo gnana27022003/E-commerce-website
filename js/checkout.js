@@ -1,542 +1,356 @@
-/* ============================================
-   CHECKOUT PAGE JAVASCRIPT
-============================================ */
-
-document.addEventListener('DOMContentLoaded', function () {
-    initCheckout();
-
-    loadCartFromLocalStorage();   // ✅ FIRST
-    console.log("AFTER LOAD:", cartItems);
-
-    loadSampleData();             // uses cartItems
-    initFeesToggle();
-
-    // 🔥 FORCE render after everything
-    setTimeout(() => {
-        renderOrderItems();
-        updatePriceDetails();
-    }, 0);
-});
-
-
-// Cart items array (will be loaded from localStorage)
-let cartItems = [];
-
-// Sample saved addresses (empty initially - user will add new address)
-let savedAddresses = [];
+/* ===========================
+   CHECKOUT INITIALIZATION
+=========================== */
 
 let selectedAddressId = null;
-let currentStep = 2; // Start at address step (login already completed)
 
-// ========== LOCALSTORAGE FUNCTIONS ==========
-function loadCartFromLocalStorage() {
-    const savedCart = localStorage.getItem('cart'); // ✅ CORRECT KEY
+// addresses coming from EJS
+let userAddresses = savedAddresses || [];
 
-    if (!savedCart) {
-        console.error("❌ No cart found in localStorage");
-        cartItems = [];
-        return;
-    }
-
-    try {
-        cartItems = JSON.parse(savedCart);
-
-        if (!Array.isArray(cartItems)) {
-            console.error("❌ Cart is not an array", cartItems);
-            cartItems = [];
-            return;
-        }
-
-        console.log("✅ CART LOADED:", cartItems);
-    } catch (err) {
-        console.error("❌ Cart JSON parse failed", err);
-        cartItems = [];
-    }
-}
-
-
-function saveCartToLocalStorage() {
-    try {
-        localStorage.setItem('cart', JSON.stringify(cartItems));
-        console.log('Cart saved to localStorage');
-    } catch (e) {
-        console.error('Error saving cart to localStorage:', e);
-    }
-}
-
-function loadAddressesFromLocalStorage() {
-    const savedAddresses = localStorage.getItem('savedAddresses');
-    if (savedAddresses) {
-        try {
-            return JSON.parse(savedAddresses);
-        } catch (e) {
-            console.error('Error parsing addresses from localStorage:', e);
-            return [];
-        }
-    }
-    return [];
-}
-
-function saveAddressesToLocalStorage() {
-    try {
-        localStorage.setItem('savedAddresses', JSON.stringify(savedAddresses));
-        console.log('Addresses saved to localStorage');
-    } catch (e) {
-        console.error('Error saving addresses to localStorage:', e);
-    }
-}
+document.addEventListener("DOMContentLoaded", initCheckout);
 
 function initCheckout() {
-    // Add address button
-    document.getElementById('add-address-btn').addEventListener('click', showAddressForm);
-    document.getElementById('cancel-address-btn').addEventListener('click', hideAddressForm);
-    
-    // Address form submission
-    document.getElementById('address-form').addEventListener('submit', handleAddressSave);
-    
-    // Continue button
-    document.getElementById('continue-btn').addEventListener('click', proceedToPayment);
-    
-    // Change login button
-    document.getElementById('change-login-btn').addEventListener('click', handleChangeLogin);
-    
-    // Change address button
-    const addressChangeBtn = document.getElementById('address-change-btn');
+
+    // LOGIN CHANGE
+    const loginChangeBtn = document.getElementById("change-login-btn");
+    if (loginChangeBtn) {
+        loginChangeBtn.addEventListener("click", () => {
+            alert("Login change functionality here");
+        });
+    }
+
+    // ADDRESS CHANGE
+    const addressChangeBtn = document.getElementById("address-change-btn");
     if (addressChangeBtn) {
-        addressChangeBtn.addEventListener('click', handleChangeAddress);
+        addressChangeBtn.addEventListener("click", () => {
+            openStep("address");
+        });
     }
-}
 
-function loadSampleData() {
-    console.log('Loading sample data...');
-    console.log('Cart items:', cartItems.length);
-    
-    // Load saved addresses from localStorage
-    const loadedAddresses = loadAddressesFromLocalStorage();
-    if (loadedAddresses.length > 0) {
-        savedAddresses = loadedAddresses;
+    // ADD ADDRESS BUTTON
+    const addAddressBtn = document.getElementById("add-address-btn");
+    if (addAddressBtn) {
+        addAddressBtn.addEventListener("click", showAddressForm);
     }
-    
+
+    // CANCEL ADDRESS BUTTON
+    const cancelBtn = document.getElementById("cancel-address-btn");
+    if (cancelBtn) {
+        cancelBtn.addEventListener("click", hideAddressForm);
+    }
+
+    // CONTINUE BUTTON
+    const continueBtn = document.getElementById("continue-btn");
+    if (continueBtn) {
+        continueBtn.addEventListener("click", continueToOrder);
+    }
+
     renderSavedAddresses();
-    renderOrderItems();
-    updatePriceDetails();
-    console.log('Sample data loaded successfully');
 }
 
-// ========== ADDRESS MANAGEMENT ==========
+
+/* ===========================
+   STEP CONTROL
+=========================== */
+
+function openStep(step) {
+
+    document.querySelectorAll(".step-content").forEach(el => {
+        el.style.display = "none";
+    });
+
+    if (step === "address") {
+        document.getElementById("address-content").style.display = "block";
+    }
+
+    if (step === "order") {
+        document.getElementById("order-content").style.display = "block";
+    }
+}
+
+
+/* ===========================
+   ADDRESS MANAGEMENT
+=========================== */
+
 function renderSavedAddresses() {
-    const container = document.getElementById('saved-addresses');
-    container.innerHTML = '';
-    
-    if (savedAddresses.length === 0) {
-        // No saved addresses, show add address form button only
+
+    const container = document.getElementById("saved-addresses");
+    if (!container) return;
+
+    container.innerHTML = "";
+
+    if (!userAddresses.length) {
+        container.innerHTML = `<p>No saved addresses found.</p>`;
         return;
     }
-    
-    savedAddresses.forEach((addr, index) => {
-        const addressCard = document.createElement('div');
-        addressCard.className = 'address-card';
-        if (index === 0) {
-            addressCard.classList.add('selected');
-            selectedAddressId = addr.id;
-        }
-        
+
+    userAddresses.forEach((addr, index) => {
+
+        const addressCard = document.createElement("div");
+        addressCard.className = "address-card";
+
         addressCard.innerHTML = `
-            <div class="address-radio">
-                <input type="radio" name="address" id="addr-${addr.id}" 
-                       ${index === 0 ? 'checked' : ''} 
-                       data-address-id="${addr.id}">
+            <label class="address-label">
+                <input type="radio"
+                       name="selectedAddress"
+                       data-address-id="${index}"
+                       ${index === 0 ? "checked" : ""}>
+
                 <div class="address-details">
-                    <span class="address-type-badge">${addr.type.toUpperCase()}</span>
-                    <div class="address-name">${addr.name} ${addr.phone}</div>
-                    <div class="address-text">
-                        ${addr.address}<br>
-                        ${addr.city}, ${addr.state} - ${addr.pincode}
-                    </div>
-                    ${index === 0 || selectedAddressId === addr.id ? '<button class="deliver-here-btn">DELIVER HERE</button>' : ''}
+                    <strong>${addr.name}</strong> ${addr.phone}<br>
+                    ${addr.addressLine}, ${addr.locality},<br>
+                    ${addr.city}, ${addr.state} - ${addr.pincode}<br>
+                    ${addr.landmark || ""}
                 </div>
-            </div>
-            <button class="edit-address-btn">EDIT</button>
+            </label>
         `;
-        
+
         container.appendChild(addressCard);
-        
-        // Add radio change listener
-        const radio = addressCard.querySelector('input[type="radio"]');
-        radio.addEventListener('change', () => handleAddressSelect(addr.id));
-        
-        // Add deliver here button listener
-        const deliverBtn = addressCard.querySelector('.deliver-here-btn');
-        if (deliverBtn) {
-            deliverBtn.addEventListener('click', () => confirmAddress(addr.id));
-        }
     });
+
+    // default selection
+    selectedAddressId = 0;
+    showDeliverButton(0);
+
+    document.querySelectorAll("input[name='selectedAddress']")
+        .forEach(radio => {
+            radio.addEventListener("change", function () {
+                const id = this.dataset.addressId;
+                selectedAddressId = id;
+                showDeliverButton(id);
+            });
+        });
 }
 
-function handleAddressSelect(addressId) {
-    selectedAddressId = addressId;
-    
-    // Update UI
-    document.querySelectorAll('.address-card').forEach(card => {
-        card.classList.remove('selected');
-        const existingBtn = card.querySelector('.deliver-here-btn');
-        if (existingBtn) existingBtn.remove();
-    });
-    
-    // Add deliver button to selected address
-    const selectedCard = document.querySelector(`input[data-address-id="${addressId}"]`).closest('.address-card');
-    selectedCard.classList.add('selected');
-    
-    const deliverBtn = document.createElement('button');
-    deliverBtn.className = 'deliver-here-btn';
-    deliverBtn.textContent = 'DELIVER HERE';
-    deliverBtn.addEventListener('click', () => confirmAddress(addressId));
-    
-    selectedCard.querySelector('.address-details').appendChild(deliverBtn);
-}
 
-function confirmAddress(addressId) {
-    // Move to order summary step
-    const addressHeader = document.getElementById('address-header');
-    const addressContent = document.getElementById('address-content');
-    const addressTick = document.getElementById('address-tick');
-    const addressChangeBtn = document.getElementById('address-change-btn');
-    
-    addressHeader.classList.remove('active');
-    addressHeader.classList.add('completed');
-    addressContent.classList.remove('active');
-    addressContent.style.display = 'none';
-    
-    // Show tick mark and change button
-    if (addressTick) addressTick.style.display = 'inline';
-    if (addressChangeBtn) addressChangeBtn.style.display = 'inline-block';
-    
-    document.getElementById('order-header').classList.add('active');
-    document.getElementById('order-content').classList.add('active');
-    document.getElementById('order-content').style.display = 'block';
-    
-    currentStep = 3;
-    
-    // Re-render order items to ensure they're visible
-    renderOrderItems();
-    updatePriceDetails();
-    
-    // Update step indicator
-    updateStepIndicator();
-    
-    console.log('Address confirmed, order summary displayed');
-}
 
 function showAddressForm() {
-    document.getElementById('address-form-wrapper').style.display = 'block';
-    document.getElementById('add-address-btn').style.display = 'none';
+    document.getElementById("address-form-wrapper").style.display = "block";
 }
 
 function hideAddressForm() {
-    document.getElementById('address-form-wrapper').style.display = 'none';
-    document.getElementById('add-address-btn').style.display = 'block';
-    document.getElementById('address-form').reset();
+    document.getElementById("address-form-wrapper").style.display = "none";
 }
 
-function handleAddressSave(e) {
-    e.preventDefault();
-    
-    const addressField = document.getElementById('address').value;
-    const locality = document.getElementById('locality').value;
-    const city = document.getElementById('city').value;
-    const state = document.getElementById('state').value;
-    const pincode = document.getElementById('pincode').value;
-    const landmark = document.getElementById('landmark').value;
-    
-    // Build full address string
-    let fullAddress = addressField;
-    if (locality) fullAddress += ', ' + locality;
-    if (landmark) fullAddress += ', ' + landmark;
-    
-    const newAddress = {
-        id: savedAddresses.length + 1,
-        name: document.getElementById('name').value,
-        phone: document.getElementById('phone').value,
-        address: fullAddress,
-        locality: locality,
-        city: city,
-        state: state,
-        pincode: pincode,
-        landmark: landmark,
-        altPhone: document.getElementById('alt-phone').value,
-        type: document.querySelector('input[name="address-type"]:checked').value
-    };
-    
-    savedAddresses.push(newAddress);
-    saveAddressesToLocalStorage(); // Save to localStorage
-    
-    // Re-render addresses
-    renderSavedAddresses();
-    
-    // Hide form
-    hideAddressForm();
-    
-    // Auto-select the new address
-    selectedAddressId = newAddress.id;
-    handleAddressSelect(newAddress.id);
-}
 
-// ========== ORDER SUMMARY ==========
-function renderOrderItems() {
-    const container = document.getElementById('order-items');
-    if (!container) {
-        console.error('Order items container not found');
-        return;
-    }
-    
-    container.innerHTML = '';
-    
-    if (cartItems.length === 0) {
-        container.innerHTML = '<p style="text-align: center; padding: 40px; color: #878787; font-size: 16px;">Your cart is empty</p>';
-        return;
-    }
-    
-    cartItems.forEach(item => {
+/* ===========================
+   ORDER SUMMARY STEP
+=========================== */
 
-    // 🔒 NORMALIZE CART ITEM (VERY IMPORTANT)
-    item.quantity ??= 1;
-    item.originalPrice ??= item.price;
-    item.discount ??= '';
-    item.seller ??= 'Retail Seller';
-    item.coins ??= 0;
-    item.delivery ??= 'Tomorrow';
-    item.variant ??= item.color || '';
-    item.protectFee ??= 0;
+function continueToOrder() {
 
-    const itemDiv = document.createElement('div');
-    itemDiv.className = 'order-item';
-
-    itemDiv.innerHTML = `
-        <img src="${item.image}" alt="${item.name}" class="item-image">
-
-        <div class="item-details">
-            <div class="item-name">${item.name}</div>
-
-            ${item.variant ? `<div class="item-variant">${item.variant}</div>` : ''}
-
-            <div class="item-seller">
-                Seller: ${item.seller}
-                <span class="seller-badge">
-                    <i class="fa-solid fa-shield-halved"></i> Assured
-                </span>
-            </div>
-
-            <div class="item-price">
-                <span class="current-price">₹${item.price.toLocaleString()}</span>
-                <span class="original-price">₹${item.originalPrice.toLocaleString()}</span>
-                ${item.discount ? `<span class="discount">${item.discount}</span>` : ''}
-                ${item.coins ? `
-                    <span class="coins-badge">
-                        <i class="fa-solid fa-coins"></i> ${item.coins}
-                    </span>
-                ` : ''}
-            </div>
-
-            ${item.protectFee ? `
-                <div class="item-protect-fee">
-                    + ₹${item.protectFee} Protect Promise Fee
-                    <i class="fa-solid fa-circle-info"></i>
-                </div>
-            ` : ''}
-
-            <div class="item-emi">
-                Or Pay ₹${Math.ceil(item.price / 6).toLocaleString()}
-            </div>
-
-            <div class="delivery-options">
-                <div class="delivery-option">
-                    <input type="radio" checked>
-                    <label>Delivery by ${item.delivery}</label>
-                </div>
-            </div>
-
-            <div class="delivery-highlight">
-                <i class="fa-solid fa-box-open"></i>
-                <div class="delivery-highlight-text">
-                    <strong>Open Box Delivery</strong> is eligible for this item.
-                    <a href="#">Know More</a>
-                </div>
-            </div>
-
-            <div class="item-quantity">
-                <div class="quantity-controls">
-                    <button class="qty-btn" onclick="updateQuantity('${item.id}', -1)">−</button>
-                    <span class="qty-value" id="qty-${item.id}">${item.quantity}</span>
-                    <button class="qty-btn" onclick="updateQuantity('${item.id}', 1)">+</button>
-                </div>
-                <button class="remove-btn" onclick="removeItem('${item.id}')">REMOVE</button>
-            </div>
-        </div>
-    `;
-
-    container.appendChild(itemDiv);
-});
-
-    
-    console.log(`Rendered ${cartItems.length} items in order summary`);
-}
-
-function updateQuantity(itemId, change) {
-    const qtyElement = document.getElementById(`qty-${itemId}`);
-    let currentQty = parseInt(qtyElement.textContent);
-    let newQty = currentQty + change;
-    
-    if (newQty >= 1 && newQty <= 10) {
-        qtyElement.textContent = newQty;
-        
-        // Update quantity in cartItems array
-        const item = cartItems.find(item => item.id === itemId);
-        if (item) {
-            item.quantity = newQty;
-            saveCartToLocalStorage(); // Save to localStorage
-        }
-        
-        updatePriceDetails();
-    }
-}
-
-function removeItem(itemId) {
-    if (confirm('Are you sure you want to remove this item?')) {
-        const index = cartItems.findIndex(item => item.id === itemId);
-        if (index > -1) {
-            cartItems.splice(index, 1);
-            saveCartToLocalStorage(); // Save to localStorage
-            renderOrderItems();
-            updatePriceDetails();
-            
-            // If cart is empty, show message
-            if (cartItems.length === 0) {
-                alert('Your cart is empty. Redirecting to homepage...');
-                // Optionally redirect to homepage or products page
-                // window.location.href = 'homepage.html';
-            }
-        }
-    }
-}
-
-// Make functions globally available
-window.updateQuantity = updateQuantity;
-window.removeItem = removeItem;
-
-// ========== PRICE DETAILS ==========
-function updatePriceDetails() {
-    let totalPrice = 0;
-    let totalOriginalPrice = 0;
-    let totalProtectFee = 0;
-    let totalItems = 0;
-    
-    cartItems.forEach(item => {
-        const qty = item.quantity || 1;
-        totalPrice += item.price * qty;
-        totalOriginalPrice += item.originalPrice * qty;
-        totalItems += qty;
-        if (item.protectFee) {
-            totalProtectFee += item.protectFee;
-        }
-    });
-    
-    const totalSavings = totalOriginalPrice - totalPrice;
-    const totalPayable = totalPrice + totalProtectFee;
-    
-    // Update price details
-    const itemCountEl = document.getElementById('item-count');
-    const priceTotalEl = document.getElementById('price-total');
-    const promiseFeeEl = document.getElementById('promise-fee');
-    const totalPayableEl = document.getElementById('total-payable');
-    const totalSavingsEl = document.getElementById('total-savings');
-    
-    if (itemCountEl) itemCountEl.textContent = totalItems;
-    if (priceTotalEl) priceTotalEl.textContent = `₹${totalOriginalPrice.toLocaleString()}`;
-    if (promiseFeeEl) promiseFeeEl.textContent = `₹${totalProtectFee}`;
-    if (totalPayableEl) totalPayableEl.textContent = `₹${totalPayable.toLocaleString()}`;
-    if (totalSavingsEl) totalSavingsEl.textContent = `₹${totalSavings.toLocaleString()}`;
-}
-
-function initFeesToggle() {
-    const toggle = document.getElementById('fees-toggle');
-    const breakdown = document.getElementById('fees-breakdown');
-    
-    toggle.addEventListener('click', () => {
-        toggle.classList.toggle('collapsed');
-        breakdown.classList.toggle('hidden');
-    });
-}
-
-// ========== NAVIGATION ==========
-function updateStepIndicator() {
-    const headerSteps = document.querySelectorAll('.checkout-steps-indicator .step-item');
-    headerSteps.forEach((step, index) => {
-        if (index < currentStep - 1) {
-            step.classList.add('active');
-        } else if (index === currentStep - 1) {
-            step.classList.add('active');
-        } else {
-            step.classList.remove('active');
-        }
-    });
-}
-
-function handleChangeLogin() {
-    // In real app, this would trigger login modal
-    alert('Login change functionality - redirect to login page');
-}
-
-function handleChangeAddress() {
-    // Re-open the address step
-    const addressHeader = document.getElementById('address-header');
-    const addressContent = document.getElementById('address-content');
-    const addressTick = document.getElementById('address-tick');
-    const addressChangeBtn = document.getElementById('address-change-btn');
-    const orderHeader = document.getElementById('order-header');
-    const orderContent = document.getElementById('order-content');
-    
-    // Reset address step to active
-    addressHeader.classList.add('active');
-    addressHeader.classList.remove('completed');
-    addressContent.classList.add('active');
-    addressContent.style.display = 'block';
-    
-    // Hide tick and change button
-    if (addressTick) addressTick.style.display = 'none';
-    if (addressChangeBtn) addressChangeBtn.style.display = 'none';
-    
-    // Hide order summary step
-    orderHeader.classList.remove('active');
-    orderContent.classList.remove('active');
-    orderContent.style.display = 'none';
-    
-    currentStep = 2;
-    updateStepIndicator();
-    
-    console.log('Address change requested');
-}
-
-function proceedToPayment() {
-    const emailInput = document.getElementById('order-email');
-    const email = emailInput ? emailInput.value.trim() : '';
-
-    if (!email || !email.includes('@')) {
-        alert('Please enter a valid email address');
-        emailInput.focus();
+    if (selectedAddressId === null) {
+        alert("Please select an address");
         return;
     }
 
-    // ✅ Save checkout info (optional but useful)
-    localStorage.setItem('checkoutEmail', email);
-    localStorage.setItem('checkoutStep', 'payment');
+    // mark address step completed
+    document.getElementById("address-header").classList.remove("active");
+    document.getElementById("address-header").classList.add("completed");
 
-    console.log('Redirecting to payment page...');
-    
-    // ✅ REDIRECT TO PAYMENT PAGE
-    window.location.href = 'payment.html';
+    openStep("order");
 }
-document.getElementById('continue-btn')
-    .addEventListener('click', proceedToPayment);
 
 
-console.log('Checkout page loaded successfully ✅');
+/* ===========================
+   OPTIONAL MAP BUTTONS
+=========================== */
+
+const mapModal = document.getElementById("map-modal");
+
+const searchOnMapBtn = document.getElementById("search-on-map");
+if (searchOnMapBtn) {
+    searchOnMapBtn.addEventListener("click", () => {
+        if (mapModal) mapModal.style.display = "flex";
+    });
+}
+
+const closeMapBtn = document.getElementById("close-map");
+if (closeMapBtn) {
+    closeMapBtn.addEventListener("click", () => {
+        if (mapModal) mapModal.style.display = "none";
+    });
+}
+
+function showDeliverButton(addressId) {
+
+    // remove old buttons
+    document.querySelectorAll(".deliver-here-btn")
+        .forEach(btn => btn.remove());
+
+    document.querySelectorAll(".address-card")
+        .forEach(card => card.classList.remove("selected"));
+
+    const selectedInput =
+        document.querySelector(`input[data-address-id="${addressId}"]`);
+
+    if (!selectedInput) return;
+
+    const card = selectedInput.closest(".address-card");
+    card.classList.add("selected");
+
+    const btn = document.createElement("button");
+    btn.className = "deliver-here-btn";
+    btn.textContent = "DELIVER HERE";
+
+    btn.onclick = () => confirmAddress(addressId);
+
+    card.querySelector(".address-details").appendChild(btn);
+}
+
+
+function confirmAddress(addressId) {
+
+    // set selected address id
+    document.getElementById("deliver-address-id").value = addressId;
+
+    // submit form
+    document.getElementById("deliver-form").submit();
+}
+
+
+/* ===========================
+   CURRENT LOCATION (BASIC)
+=========================== */
+
+const useLocationBtn = document.getElementById("use-current-location");
+
+if (useLocationBtn) {
+    useLocationBtn.addEventListener("click", () => {
+
+        if (!navigator.geolocation) {
+            alert("Geolocation not supported");
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            () => alert("Location captured successfully"),
+            () => alert("Unable to get location")
+        );
+    });
+}
+
+// ================= SHOW ADDRESS FORM =================
+document.getElementById("add-address-btn").onclick = () => {
+  document.getElementById("address-form-wrapper").style.display = "block";
+};
+
+// ================= CURRENT LOCATION =================
+document.getElementById("use-current-location").onclick = () => {
+  if (!navigator.geolocation) {
+    alert("Geolocation not supported");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      reverseGeocode(pos.coords.latitude, pos.coords.longitude);
+    },
+    () => alert("Location permission denied"),
+    { enableHighAccuracy: true }
+  );
+};
+
+// ================= MAP SEARCH =================
+let map, marker, selectedLatLng;
+
+document.getElementById("search-on-map").onclick = () => {
+  document.getElementById("map-modal").style.display = "flex";
+  initMap();
+};
+
+document.getElementById("close-map").onclick = () => {
+  document.getElementById("map-modal").style.display = "none";
+};
+
+function initMap() {
+  map = new google.maps.Map(document.getElementById("map"), {
+    center: { lat: 20.5937, lng: 78.9629 },
+    zoom: 5
+  });
+
+  marker = new google.maps.Marker({ map });
+
+  const input = document.getElementById("map-search");
+  const autocomplete = new google.maps.places.Autocomplete(input);
+
+  autocomplete.addListener("place_changed", () => {
+    const place = autocomplete.getPlace();
+    if (!place.geometry) return;
+
+    map.setCenter(place.geometry.location);
+    map.setZoom(15);
+    marker.setPosition(place.geometry.location);
+    selectedLatLng = place.geometry.location;
+  });
+
+  map.addListener("click", e => {
+    marker.setPosition(e.latLng);
+    selectedLatLng = e.latLng;
+  });
+}
+
+// ================= CONFIRM LOCATION =================
+document.getElementById("confirm-location").onclick = () => {
+  const input = document.getElementById("map-search").value.trim();
+
+  if (selectedLatLng) {
+    reverseGeocode(selectedLatLng.lat(), selectedLatLng.lng());
+    document.getElementById("map-modal").style.display = "none";
+    return;
+  }
+
+  if (!input) {
+    alert("Please select a location on map");
+    return;
+  }
+
+  // 🔥 FALLBACK: Geocode typed text
+  const geocoder = new google.maps.Geocoder();
+  geocoder.geocode({ address: input }, (results, status) => {
+    if (status !== "OK" || !results[0]) {
+      alert("Unable to fetch address");
+      return;
+    }
+
+    const loc = results[0].geometry.location;
+    reverseGeocode(loc.lat(), loc.lng());
+    document.getElementById("map-modal").style.display = "none";
+  });
+};
+
+
+// ================= REVERSE GEOCODE =================
+function reverseGeocode(lat, lng) {
+  // 🔥 FORCE SHOW FORM FIRST
+  document.getElementById("address-form-wrapper").style.display = "block";
+  document.getElementById("add-address-btn").style.display = "none";
+
+  const geocoder = new google.maps.Geocoder();
+
+  geocoder.geocode({ location: { lat, lng } }, (results, status) => {
+    if (status !== "OK" || !results[0]) {
+      alert("Unable to fetch address");
+      return;
+    }
+
+    let city = "", state = "", pincode = "", locality = "";
+
+    results[0].address_components.forEach(c => {
+      if (c.types.includes("locality")) city = c.long_name;
+      if (c.types.includes("administrative_area_level_1")) state = c.long_name;
+      if (c.types.includes("postal_code")) pincode = c.long_name;
+      if (c.types.includes("sublocality") || c.types.includes("sublocality_level_1")) {
+        locality = c.long_name;
+      }
+    });
+
+    document.getElementById("address").value = results[0].formatted_address;
+    document.getElementById("city").value = city;
+    document.getElementById("state").value = state;
+    document.getElementById("pincode").value = pincode;
+    document.getElementById("locality").value = locality;
+  });
+}
+

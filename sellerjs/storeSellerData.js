@@ -8,7 +8,7 @@ async function storeSellerData(req,res) {
             phone:req.body.phone,
             company_name: req.body.company,
             role: 'seller',
-            uniqueId: uuidv4()
+           userId: uuidv4()
             
         };
     console.log(req.body.name)

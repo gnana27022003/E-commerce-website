@@ -31,7 +31,8 @@
 .product-card img {
   width: 100%;
   height: 200px;
-  object-fit: cover;
+  object-fit:scale-down;
+  padding: 5px;
 }
 
 .product-info {
@@ -109,8 +110,15 @@
 </div>
 
 
+<script>
+ 
+  <% if (message) { %>
+    alert("<%= message %>");
+  <% } %>
 
-    
+  
+</script>
+
         
 </body>
 </html>

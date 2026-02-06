@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Sign Up Page</title>
+  
  <link rel="stylesheet" href="/signup.css">
 <script>  
     function validate(){
@@ -25,6 +26,13 @@
       return true
     }
   }
+
+   document.addEventListener('DOMContentLoaded', () => {
+        const errorMessage = "<%= errorMessage %>";
+        if (errorMessage) {
+            document.getElementById('error-message').style.display = 'block';
+        }
+    });
   </script>
 </head>
 <body>
@@ -42,6 +50,7 @@
       <div class="input-group">
         <label for="password">Password</label>
         <input type="password" id="password" name="password" placeholder="Create a password" required>
+        <div id="error-message" class="error-message"><%= errorMessage %></div>
       </div>
 
       <button type="submit" class="btn">Sign Up</button>
@@ -53,7 +62,7 @@
       <u><a href="/terms">BrandHub Privacy Policy</a></u>.
     </p>
 
-    <p>Already have an account? <a href="/usersignin" class="signin-link">Sign in</a></p>
+    <p>Already have an account? <a href="/usersignin" class="signin-link">SignIn</a></p>
   </div>
 </body>
 </html>

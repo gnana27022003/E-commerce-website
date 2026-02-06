@@ -7,7 +7,7 @@ const sellermodel = new mongoose.Schema({
     phone: String,
     role: { type: String, enum: ['user', 'seller'], default: 'seller' },
     company_name: String,
-    uniqueId: { type: String, unique: true },
+   userId: { type: String, unique: true },
 
     resetOTP: String,
     resetOTPExpiry: Date

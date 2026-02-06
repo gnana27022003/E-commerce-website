@@ -34,6 +34,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 
 app.use(express.static(path.join(__dirname,'views')))
+app.use(express.static(path.join(__dirname,'js')))
 app.use(express.static(path.join(__dirname,'css')))
 app.use(express.static(path.join(__dirname,'images')))
 app.use('/uploads', express.static('uploads'));

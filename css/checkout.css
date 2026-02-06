@@ -308,7 +308,7 @@ body {
     flex: 1;
 }
 
-.address-type-badge {
+.addresstype-badge {
     display: inline-block;
     background: #f0f0f0;
     padding: 4px 10px;
@@ -444,19 +444,19 @@ body {
     grid-column: 1 / -1;
 }
 
-.address-type {
+.addresstype {
     display: flex;
     align-items: center;
     gap: 20px;
 }
 
-.address-type label:first-child {
+.addresstype label:first-child {
     font-size: 14px;
     font-weight: 600;
     margin-right: 10px;
 }
 
-.address-type label {
+.addresstype label {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -464,7 +464,7 @@ body {
     font-size: 14px;
 }
 
-.address-type input[type="radio"] {
+.addresstype input[type="radio"] {
     width: 16px;
     height: 16px;
 }
@@ -1009,6 +1009,77 @@ textarea {
 }
 
 
+.location-options {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.location-options button {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #2874f0;
+  background: #fff;
+  color: #2874f0;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.map-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.map-box {
+  background: #fff;
+  width: 600px;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+#map-search {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+}
+
+#map {
+  height: 400px;
+}
+
+.map-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+.map-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 9999;
+  display: none;
+}
+
+.map-box {
+  background: #fff;
+  width: 80%;
+  max-width: 900px;
+  height: 500px;
+  margin: auto;
+  padding: 12px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+}
+
+#map {
+  flex: 1;
+}
 
 
 

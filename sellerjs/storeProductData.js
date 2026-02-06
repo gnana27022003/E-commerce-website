@@ -28,6 +28,7 @@ const storeProductData = async (req, res) => {
             productId: uuidv4(),
             productName: req.body.productName,
             productDetails: req.body.productDetails,
+            sellerId: req.session.sellerId,
             stock: stock,
             price: price,
             remaining: stock,
