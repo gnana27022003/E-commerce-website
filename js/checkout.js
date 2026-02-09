@@ -74,6 +74,13 @@ function confirmAddress(addressId) {
     renderOrderItems();
     updatePriceDetails();
     updateStepIndicator();
+    
+    // ✅ SAVE SELECTED ADDRESS FOR PAYMENT & ORDER PAGE
+    const selectedAddress = savedAddresses.find(a => a.id === addressId);
+    if (selectedAddress) {
+        localStorage.setItem("selectedAddress", JSON.stringify(selectedAddress));
+    }
+
 }
 
 function showAddressForm() {
@@ -229,6 +236,7 @@ function proceedToPayment() {
     localStorage.setItem('checkoutEmail', email);
     localStorage.setItem('checkoutStep', 'payment');
     window.location.href = 'payment.html';
+
 }
 
 let mapInitialized = false;
