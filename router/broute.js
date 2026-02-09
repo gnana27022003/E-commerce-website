@@ -41,7 +41,7 @@ broute.get('/products/:cat',async(req,res)=>{
     const category=req.params.cat;
     try {
         const products = await productmodel.find({category:category})
-        res.render('products', { products,category});
+        res.render('products', { products,category,loggedIn: req.session.loggedIn || false});
     } catch (error) {
         console.error('Error fetching workers:', error);
         res.status(500).send('Error fetching products');
@@ -56,7 +56,7 @@ broute.get('/product/:id', async(req,res)=>{
   const message = req.session.message;
   req.session.message = null;
   req.session.productId = product.productId;
-  res.render('product',{product,prods,message,reviews})
+  res.render('product',{product,prods,message,reviews,loggedIn: req.session.loggedIn || false})
 })
 
 broute.get('/review/:id',async(req,res)=>{

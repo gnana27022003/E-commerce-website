@@ -10,56 +10,11 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="/checkout.css">
-    <script 
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGqFR-DVrDPtwB9JS-pjJwIYvDaInKTjo&libraries=places"
-  async defer>
-</script>
-
-
+    <link rel="stylesheet" href="../css/checkout.css">
 </head>
 <body>
 
-<!-- ================= HEADER ================= -->
-<header class="flipkart-header">
-    <div class="header-container">
-        <!-- LOGO -->
-        <div class="logo-section">
-            <img src="../images/logo.png" class="logo-img" alt="logo">
-        </div>
-    </div>
-</header>
-
-<!-- ================= CHECKOUT STEPS INDICATOR (BELOW HEADER) ================= -->
-<div class="checkout-steps-indicator">
-    <div class="steps-indicator-container">
-        <div class="step-item active">
-            <span class="step-number">1</span>
-            <span class="step-label">LOGIN</span>
-        </div>
-        <div class="step-divider"></div>
-        <div class="step-item">
-            <span class="step-number">2</span>
-            <span class="step-label">DELIVERY ADDRESS</span>
-        </div>
-        <div class="step-divider"></div>
-        <div class="step-item">
-            <span class="step-number">3</span>
-            <span class="step-label">ORDER SUMMARY</span>
-        </div>
-        <div class="step-divider"></div>
-        <div class="step-item">
-            <span class="step-number">4</span>
-            <span class="step-label">PAYMENT</span>
-        </div>
-
-        <!-- SECURE BADGE -->
-        <div class="secure-badge">
-            <i class="fa-solid fa-shield-halved"></i>
-            <span>100% SECURE</span>
-        </div>
-    </div>
-</div>
+<%- include('header') %>
 
 <!-- ================= CHECKOUT CONTAINER ================= -->
 <div class="checkout-wrapper">
@@ -112,49 +67,38 @@
 
                     <!-- Add Address Form (Hidden Initially) -->
                     <div class="address-form-wrapper" id="address-form-wrapper" style="display: none;">
-                        <div class="location-options">
-                        <button type="button" id="use-current-location">
-                            <i class="fa-solid fa-location-crosshairs"></i>
-                            Use current location
-                        </button>
-
-                        <button type="button" id="search-on-map">
-                            <i class="fa-solid fa-map"></i>
-                            Search on map
-                        </button>
-                        </div>
                         <h3>ADD A NEW ADDRESS</h3>
-                        <form id="address-form" method="post" action="/addaddress">
+                        <form id="address-form">
                             <div class="form-row">
-                                <input type="text" id="name" name="name" placeholder="Name" required>
-                                <input type="tel" id="phone" name="phone" placeholder="10-digit mobile number" required>
+                                <input type="text" id="name" placeholder="Name" required>
+                                <input type="tel" id="phone" placeholder="10-digit mobile number" required>
                             </div>
                             <div class="form-row">
-                                <input type="text" id="pincode" name="pincode" placeholder="Pincode" required>
-                                <input type="text" id="locality" name="locality" placeholder="Locality" required>
+                                <input type="text" id="pincode" placeholder="Pincode" required>
+                                <input type="text" id="locality" placeholder="Locality" required>
                             </div>
-                            <textarea id="address" placeholder="Address (Area and Street)" name="addressLine" required></textarea>
+                            <textarea id="address" placeholder="Address (Area and Street)" required></textarea>
                             <div class="form-row">
-                                <input type="text" id="city" name="city" placeholder="City/District/Town" required>
-                                <input type="text" id="state" name="state" placeholder="State" required>
+                                <input type="text" id="city" placeholder="City/District/Town" required>
+                                <input type="text" id="state" placeholder="State" required>
                             </div>
                             <div class="form-row">
-                                <input type="text" id="landmark" name="landmark" placeholder="Landmark (Optional)">
-                                <input type="tel" id="alt-phone" name="alternatePhone" placeholder="Alternate Phone (Optional)">
+                                <input type="text" id="landmark" placeholder="Landmark (Optional)">
+                                <input type="tel" id="alt-phone" placeholder="Alternate Phone (Optional)">
                             </div>
-                            <div class="addresstype">
+                            <div class="address-type">
                                 <label>Address Type:</label>
                                 <label>
-                                    <input type="radio" name="addresstype" value="home" checked>
+                                    <input type="radio" name="address-type" value="home" checked>
                                     <span>Home</span>
                                 </label>
                                 <label>
-                                    <input type="radio" name="addresstype" value="work">
+                                    <input type="radio" name="address-type" value="work">
                                     <span>Work</span>
                                 </label>
                             </div>
                             <div class="form-actions">
-                                <button type="submit" class="save-btn" >SAVE AND DELIVER HERE</button>
+                                <button type="submit" class="save-btn">SAVE AND DELIVER HERE</button>
                                 <button type="button" class="cancel-btn" id="cancel-address-btn">CANCEL</button>
                             </div>
                         </form>
@@ -162,9 +106,6 @@
 
                 </div>
             </div>
-            <form id="deliver-form" method="POST" action="/deliverhere">
-                <input type="hidden" name="addressId" id="deliver-address-id">
-            </form>
 
             <!-- ========== STEP 3: ORDER SUMMARY ========== -->
             <div class="checkout-step" id="step-order">
@@ -247,27 +188,7 @@
 
     </div>
 </div>
-            <div id="map-modal" class="map-modal">
-            <div class="map-box">
-                <input type="text" id="map-search" placeholder="Search for area, street, place">
 
-                <div id="map"></div>
-
-                <div class="map-actions">
-                <button id="confirm-location">Confirm location</button>
-                <button id="close-map">Cancel</button>
-                </div>
-            </div>
-            </div>
-<script>
-        
-        <% if (msg) { %>
-        alert("<%= msg %>");
-    <% } %>
-    const savedAddresses = <%- JSON.stringify(addresses) %>;
-    
-</script>
-
-<script src="/checkout.js"></script>
+<script src="../js/checkout.js"></script>
 </body>
 </html>

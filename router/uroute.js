@@ -7,6 +7,9 @@ const sellermodel = require('../model/sellermodel')
 const bcrypt = require('bcrypt')
 const transporter = require('../js/mailer');
 const {addAddress} = require('../userjs/addAddress')
+const cartmodel = require('../model/cartmodel')
+const productmodel = require('../model/productmodel')
+
 
 uroute.get('/signup', async(req,res) => {
     res.render('signup', { errorMessage: null })
@@ -171,21 +174,22 @@ uroute.post('/reset-password', async (req, res) => {
 });
 
 
-uroute.get('/checkout',async(req,res)=>{
-    const msg = req.session.msg;
-    req.session.msg = null;
-    if (!req.session.user) {
-        return res.redirect('/usersignin');
-    }
+uroute.get('/checkout', async (req,res)=>{
 
     const user = await usermodel.findById(req.session.user._id);
 
     res.render('checkout', {
         addresses: user.addresses || [],
-        msg
+        selectedAddressId: req.session.selectedAddressId,
+        msg: req.session.msg,
+        session: req.session,
+        loggedIn: req.session.loggedIn || false 
     });
-    
-})
+
+    req.session.msg = null;
+});
+
+
 
 uroute.post('/addaddress',async(req,res)=>{
     const result = await addAddress(req,res);
@@ -201,46 +205,123 @@ uroute.post('/addaddress',async(req,res)=>{
     res.redirect('/checkout')
 })
 
+
 uroute.post("/deliverhere", async (req, res) => {
     try {
 
         const addressId = req.body.addressId;
         const userId = req.session.user._id;
-        const user = await User.findById(userId);
 
-        if (!user || !user.addresses[addressId]) {
-            req.session.msg = "Invalid address selected";
+        const user = await usermodel.findById(userId);
+
+        const selectedAddress = user.addresses.find(
+            addr => addr._id.toString() === addressId
+        );
+
+        if (!selectedAddress) {
+            req.session.msg = "Invalid address";
             return res.redirect("/checkout");
         }
 
-        const selectedAddress = user.addresses[addressId];
+        // ✅ STORE TEMPORARY ADDRESS
+        req.session.deliveryAddress = selectedAddress;
 
-        
-        req.session.deliveryAddress = {
-            name: selectedAddress.name,
-            phone: selectedAddress.phone,
-            addressLine: selectedAddress.addressLine,
-            locality: selectedAddress.locality,
-            city: selectedAddress.city,
-            state: selectedAddress.state,
-            pincode: selectedAddress.pincode,
-            landmark: selectedAddress.landmark,
-            alternatePhone: selectedAddress.alternatePhone,
-            addressType: selectedAddress.addresstype
-        };
+        // ✅ STORE SELECTED ID FOR UI
+        req.session.selectedAddressId = addressId;
 
-        
         res.redirect("/checkout");
 
     } catch (err) {
         console.log(err);
-        req.session.msg = "Something went wrong";
         res.redirect("/checkout");
     }
 });
 
 
+uroute.post("/cart/add", async (req, res) => {
+  if (!req.session.user) {
+    return res.status(401).json({ message: "Login required" });
+  }
 
+  const { productId, quantity } = req.body;
+
+  const product = await productmodel.findOne({ productId });
+  if (!product) {
+    return res.status(404).json({ message: "Product not found" });
+  }
+
+  let cart = await cartmodel.findOne({
+    userId: req.session.user._id,
+    status: "active"
+  });
+
+  if (!cart) {
+    cart = new cartmodel({
+      userId: req.session.user.userId,
+      items: []
+    });
+  }
+
+  const index = cart.items.findIndex(
+    item => item.productId === productId
+  );
+
+  if (index !== -1) {
+    cart.items[index].quantity += quantity;
+  } else {
+    cart.items.push({
+      productId,
+      quantity,
+      priceSnapshot: product.price
+    });
+  }
+
+  cart.totalAmount = cart.items.reduce(
+    (sum, item) => sum + item.quantity * item.priceSnapshot,
+    0
+  );
+
+  await cart.save();
+
+  res.json({ success: true });
+});
+
+uroute.get("/cart", async (req, res) => {
+  if (!req.session.user) {
+    return res.redirect("/usersignin");
+  }
+
+  const cart = await cartmodel.findOne({
+    userId: req.session.user._id,
+    status: "active"
+  });
+
+  if (!cart || cart.items.length === 0) {
+    return res.render("cart", { cartItems: [], total: 0 });
+  }
+
+  const products = await productmodel.find({
+    productId: { $in: cart.items.map(i => i.productId) }
+  });
+
+  const cartItems = cart.items.map(item => {
+    const product = products.find(
+      p => p.productId === item.productId
+    );
+
+    return {
+      name: product.productName,
+      image: product.productImages[0]?.filename,
+      price: item.priceSnapshot,
+      quantity: item.quantity
+    };
+  });
+
+  res.render("cart", {
+    cartItems,
+    total: cart.totalAmount
+  });
+});
 
 
 module.exports = uroute;

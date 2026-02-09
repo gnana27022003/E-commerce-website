@@ -12,7 +12,24 @@ document.addEventListener('DOMContentLoaded', function() {
     initAddToCart();
     initImageZoom();
 });
+document.querySelector(".btn-cart").addEventListener("click", async () => {
+  const quantity = Number(document.getElementById("quantity").value);
+  const productId = document
+    .querySelector(".btn-cart")
+    .dataset.id;
 
+  const res = await fetch("/cart/add", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ productId, quantity })
+  });
+
+  if (res.ok) {
+    alert("Added to cart");
+  } else {
+    alert("Login required");
+  }
+});
 /* === IMAGE GALLERY === */
 function initImageGallery() {
     const mainImage = document.getElementById('main-image');

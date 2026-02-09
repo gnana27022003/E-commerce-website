@@ -21,42 +21,7 @@
 
 <body>
     <!-- ================= HEADER ================= -->
-<header class="flipkart-header">
-    <div class="header-container">
-
-        <!-- LOGO -->
-        <div class="logo-section">
-            <a href="/">
-                <img src="/logo.png" class="logo-img" alt="logo">
-            </a>
-        </div>
-
-        <!-- RIGHT ICONS -->
-        <div class="nav-actions">
-            <a href="home.html" class="nav-item">
-                <i class="fa-solid fa-house"></i>
-                <span>Home</span>
-            </a>
-
-            <a href="login.html" class="nav-item">
-                <i class="fa-regular fa-user"></i>
-                <span>Login</span>
-            </a>
-
-            <a href="orders.html" class="nav-item">
-                <i class="fa-solid fa-box"></i>
-                <span>Orders</span>
-            </a>
-
-            <a href="checkout.html" class="nav-item">
-                <i class="fa-solid fa-cart-shopping"></i>
-                <span>Cart</span>
-            </a>
-
-        </div>
-
-    </div>
-</header>
+<%- include('header') %>
 
 
     <!-- ================= PAGE WRAPPER ================= -->
@@ -109,7 +74,11 @@
       <button class="qty-btn" id="increase">+</button>
 
       <div class="action-buttons">
-        <button class="btn-cart">Add to Cart</button>
+                <button class="btn-cart" data-id="<%= product.productId %>">
+        Add to Cart
+        </button>
+
+
         <button class="btn-buy" onclick="location.href='/checkout'">Buy Now </button>
       </div>
     </div>
@@ -256,6 +225,6 @@
     </footer>
 
     <!-- Link to JavaScript -->
-    <script src="../js/product.js"></script>
+    <script src="/product.js"></script>
 </body>
 </html>
