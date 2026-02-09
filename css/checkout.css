@@ -158,3 +158,92 @@ body{font-family:Roboto,Arial,sans-serif;background:#f1f3f6;color:#212121;}
     .item-image{width:80px;height:80px;}
 }
 button,input,textarea{font-family:'Roboto',Arial,sans-serif;}
+.map-modal {
+ position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 10000;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.map-modal-content {
+  background: #fff;
+  width: 90%;
+  max-width: 600px;
+  border-radius: 8px;
+  padding: 15px;
+  position: relative;
+}
+
+.map-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#placeSearch {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+#popupMap {
+  height: 400px;
+  width: 100%;
+}
+
+.map-modal * {
+  pointer-events: auto;
+}
+.address-radio-wrapper {
+  display: flex;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.address-radio-wrapper input[type="radio"] {
+  margin-top: 6px;
+}
+
+.address-card {
+  border: 1px solid #ddd;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.address-card.selected {
+  border: 2px solid #2874f0;
+  background: #f5faff;
+}
+
+.deliver-here-btn {
+  margin-top: 10px;
+  background: #fb641b;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+
+.location-box>button{
+    margin-bottom: 20px;
+}
+
+.continue-btn > button{
+    margin-right: 200px;
+}
+
+.proceed-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.continue-btn {
+    width: 100%;
+    max-width: 260px;
+}
+

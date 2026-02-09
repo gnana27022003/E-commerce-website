@@ -174,20 +174,18 @@ uroute.post('/reset-password', async (req, res) => {
 });
 
 
-uroute.get('/checkout', async (req,res)=>{
-
-    const user = await usermodel.findById(req.session.user._id);
-
-    res.render('checkout', {
-        addresses: user.addresses || [],
-        selectedAddressId: req.session.selectedAddressId,
-        msg: req.session.msg,
-        session: req.session,
-        loggedIn: req.session.loggedIn || false 
-    });
-
-    req.session.msg = null;
+uroute.get('/checkout', async (req, res) => {
+  const user = await usermodel.findOne({ userId: req.session.user.userId });
+  const product = await productmodel.findOne({productId: req.session.productId})
+  res.render('checkout', {
+    addresses: user.addresses,
+    selectedAddressId: req.session.selectedAddressId,
+    addressConfirmed: req.session.addressConfirmed || false,
+    loggedIn: req.session.loggedIn,
+    product:product || null
+  });
 });
+
 
 
 
@@ -206,36 +204,24 @@ uroute.post('/addaddress',async(req,res)=>{
 })
 
 
-uroute.post("/deliverhere", async (req, res) => {
-    try {
+uroute.post("/deliverhere", (req, res) => {
+  const { addressId, action } = req.body;
 
-        const addressId = req.body.addressId;
-        const userId = req.session.user._id;
+  // radio selected
+  if (action === "select") {
+    req.session.selectedAddressId = addressId;
+    req.session.addressConfirmed = false;
+  }
 
-        const user = await usermodel.findById(userId);
+  // deliver here clicked
+  if (action === "confirm") {
+    req.session.selectedAddressId = addressId;
+    req.session.addressConfirmed = true;
+  }
 
-        const selectedAddress = user.addresses.find(
-            addr => addr._id.toString() === addressId
-        );
-
-        if (!selectedAddress) {
-            req.session.msg = "Invalid address";
-            return res.redirect("/checkout");
-        }
-
-        // ✅ STORE TEMPORARY ADDRESS
-        req.session.deliveryAddress = selectedAddress;
-
-        // ✅ STORE SELECTED ID FOR UI
-        req.session.selectedAddressId = addressId;
-
-        res.redirect("/checkout");
-
-    } catch (err) {
-        console.log(err);
-        res.redirect("/checkout");
-    }
+  res.redirect("/checkout");
 });
+
 
 
 uroute.post("/cart/add", async (req, res) => {

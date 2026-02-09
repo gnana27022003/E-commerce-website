@@ -7,7 +7,7 @@ const addAddress = async(req,res)=>{
             name: req.body.name,
             phone: req.body.phone,
             addressLine: req.body.addressLine,
-            locality: req.body.addressLine,
+            locality: req.body.locality,
             city: req.body.city,
             state: req.body.state,
             pincode: req.body.pincode,

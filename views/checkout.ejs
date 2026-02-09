@@ -10,12 +10,15 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="../css/checkout.css">
+    <link rel="stylesheet" href="/checkout.css">
+    <link rel="stylesheet" href="/homepage.css">
 </head>
 <body>
 
+<!-- ================= HEADER ================= -->
 <%- include('header') %>
 
+<!-- ================= CHECKOUT CONTAINER ================= -->
 <!-- ================= CHECKOUT CONTAINER ================= -->
 <div class="checkout-wrapper">
     <div class="checkout-container">
@@ -68,32 +71,43 @@
                     <!-- Add Address Form (Hidden Initially) -->
                     <div class="address-form-wrapper" id="address-form-wrapper" style="display: none;">
                         <h3>ADD A NEW ADDRESS</h3>
-                        <form id="address-form">
+                         <div class="location-box" id="location-box" style="display:none;">
+                            <button type="button" class="add-address-btn" id="currentLocationBtn">
+                                 Use Current Location
+                            </button>
+
+                            <button type="button" class="add-address-btn" id="mapLocationBtn">
+                                 Locate on Map
+                            </button>
+
+                            <div id="map" style="height:300px;width:100%;display:none;margin-top:10px;"></div>
+                        </div>
+                        <form id="address-form" method="post" action="/addaddress">
                             <div class="form-row">
-                                <input type="text" id="name" placeholder="Name" required>
-                                <input type="tel" id="phone" placeholder="10-digit mobile number" required>
+                                <input type="text" name="name" id="name" placeholder="Name" required>
+                                <input type="tel" name="phone" id="phone" placeholder="10-digit mobile number" required>
                             </div>
                             <div class="form-row">
-                                <input type="text" id="pincode" placeholder="Pincode" required>
-                                <input type="text" id="locality" placeholder="Locality" required>
+                                <input type="text" name="pincode" id="pincode" placeholder="Pincode" required>
+                                <input type="text" name="locality" id="locality" placeholder="Locality" required>
                             </div>
-                            <textarea id="address" placeholder="Address (Area and Street)" required></textarea>
+                            <textarea id="address" name="addressLine" placeholder="Address (Area and Street)" required></textarea>
                             <div class="form-row">
-                                <input type="text" id="city" placeholder="City/District/Town" required>
-                                <input type="text" id="state" placeholder="State" required>
+                                <input type="text" name="city" id="city" placeholder="City/District/Town" required>
+                                <input type="text" name="state" id="state" placeholder="State" required>
                             </div>
                             <div class="form-row">
-                                <input type="text" id="landmark" placeholder="Landmark (Optional)">
-                                <input type="tel" id="alt-phone" placeholder="Alternate Phone (Optional)">
+                                <input type="text" name="landmark" id="landmark" placeholder="Landmark (Optional)">
+                                <input type="tel" name="alternatePhone" id="alt-phone" placeholder="Alternate Phone (Optional)">
                             </div>
                             <div class="address-type">
                                 <label>Address Type:</label>
                                 <label>
-                                    <input type="radio" name="address-type" value="home" checked>
+                                    <input type="radio" name="addresstype" value="home" checked>
                                     <span>Home</span>
                                 </label>
                                 <label>
-                                    <input type="radio" name="address-type" value="work">
+                                    <input type="radio" name="addresstype" value="work">
                                     <span>Work</span>
                                 </label>
                             </div>
@@ -103,76 +117,95 @@
                             </div>
                         </form>
                     </div>
+                    <% addresses.forEach(addr => { 
+                        const isSelected =
+                            selectedAddressId &&
+                            addr._id.toString() === selectedAddressId.toString();
+                        %>
+
+                        <div class="address-card <%= isSelected ? 'selected' : '' %>">
+
+                        <!-- RADIO -->
+                        <form method="post" action="/deliverhere">
+                            <input type="hidden" name="addressId" value="<%= addr._id %>">
+                            <input type="hidden" name="action" value="select">
+
+                            <label>
+                            <input
+                                type="radio"
+                                name="addressRadio"
+                                onchange="this.form.submit()"
+                                <%= isSelected ? 'checked' : '' %>
+                            />
+
+                            <strong><%= addr.name %></strong> – <%= addr.phone %><br>
+                            <%= addr.addressLine %>, <%= addr.city %>, <%= addr.state %> - <%= addr.pincode %>
+                            </label>
+                        </form>
+
+                        <!-- DELIVER HERE -->
+                        <% if (isSelected && !addressConfirmed) { %>
+                            <form method="post" action="/deliverhere">
+                            <input type="hidden" name="addressId" value="<%= addr._id %>">
+                            <input type="hidden" name="action" value="confirm">
+
+                            <button type="submit" class="deliver-here-btn">
+                                DELIVER HERE
+                            </button>
+                            </form>
+                        <% } %>
+
+                        </div>
+                        <% }) %>
+
 
                 </div>
             </div>
 
             <!-- ========== STEP 3: ORDER SUMMARY ========== -->
-            <div class="checkout-step" id="step-order">
-                <div class="step-header" id="order-header">
-                    <div class="step-info">
-                        <span class="step-num">3</span>
-                        <span class="step-title">ORDER SUMMARY</span>
-                    </div>
-                </div>
-                <div class="step-content" id="order-content" style="display: none;">
-                    
-                    <!-- Order Items -->
-                    <div class="order-items" id="order-items">
-                        <!-- Items will be dynamically added here -->
-                    </div>
-
-                    <!-- GST Invoice -->
-                    <div class="gst-invoice">
-                        <label>
-                            <input type="checkbox" id="gst-checkbox">
-                            <span>Use GST Invoice</span>
-                        </label>
-                    </div>
-
-                    <!-- Email Input -->
-                    <div class="email-input-wrapper">
-                        <label>Order confirmation email will be sent to</label>
-                        <input type="email" id="order-email" placeholder="Enter your email ID">
-                    </div>
-
-                    <!-- Continue Button -->
-                    <button class="continue-btn" id="continue-btn">CONTINUE</button>
-
-                </div>
-            </div>
+           
 
         </div>
 
         <!-- RIGHT COLUMN - PRICE DETAILS -->
         <div class="price-details-sidebar">
             <div class="price-details-card">
-                <h3>Price Details</h3>
+                <h3>Product & Price Details</h3>
                 
                 <div class="price-row">
-                    <span>Price (<span id="item-count">2</span> items)</span>
-                    <span id="price-total">₹20,090</span>
+                    <span><%=product.productName%></span>
+                    <span>Price</span>
+                    <span id="price-total">₹<%=product.price%></span>
                 </div>
 
                 <div class="price-row expandable" id="fees-toggle">
-                    <span>Fees <i class="fa-solid fa-chevron-up"></i></span>
+                    <span>Fees</span>
                 </div>
 
                 <div class="fees-breakdown" id="fees-breakdown">
                     <div class="price-row sub-row">
-                        <span>Protect Promise Fee</span>
+                        <span>Protect Promise Fee + GST</span>
                         <span id="promise-fee">₹99</span>
                     </div>
                 </div>
 
                 <div class="price-row total">
                     <span><strong>Total Payable</strong></span>
-                    <span id="total-payable"><strong>₹18,788</strong></span>
-                </div>
+                    <span id="total-payable"><strong>₹<%=product.price + 99%></strong></span>
+                     
 
-                <div class="savings-badge">
-                    Your Total Savings on this order <span id="total-savings">₹1,302</span>
                 </div>
+               <% if (addressConfirmed) { %>
+                    <div class="proceed-wrapper">
+                        <form action="/payment">
+                            <button class="continue-btn" id="proceed">
+                                PROCEED TO PAYMENT
+                            </button>
+                        </form>
+                    </div>
+                    <% } %>
+
+                
 
                 <div class="secure-payment">
                     <i class="fa-solid fa-shield-halved"></i>
@@ -180,7 +213,7 @@
                 </div>
 
                 <div class="terms-text">
-                    By continuing with the order, you confirm that you are above 18 years of age, and you agree to the Flipkart's 
+                    By continuing with the order, you confirm that you are above 18 years of age, and you agree to the BrandHub's 
                     <a href="#">Terms of Use</a> and <a href="#">Privacy Policy</a>
                 </div>
             </div>
@@ -189,6 +222,47 @@
     </div>
 </div>
 
-<script src="../js/checkout.js"></script>
+<!-- MAP MODAL -->
+<div id="mapModal" class="map-modal" style="display:none;">
+  <div class="map-modal-content">
+    <div class="map-modal-header">
+      <h3>Select Delivery Location</h3>
+      <button id="closeMapModal">✕</button>
+    </div>
+
+    <input
+      id="placeSearch"
+      type="text"
+      placeholder="Search for area, street, landmark"
+    />
+
+    <div id="popupMap" style="height:400px;width:100%;"></div>
+
+    <button id="confirmLocationBtn" class="save-btn">
+      CONFIRM LOCATION
+    </button>
+  </div>
+</div>
+
+
+<script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAGqFR-DVrDPtwB9JS-pjJwIYvDaInKTjo&libraries=places">
+  
+</script>
+
+<script>
+  
+
+ 
+document.getElementById("proceedPaymentBtn")
+  .addEventListener("click", () => {
+   
+    document.getElementById("address-content").style.display = "none";
+    document.getElementById("order-content").style.display = "block";
+  });
+
+</script>
+
+<script src="/checkout.js"></script>
 </body>
 </html>
