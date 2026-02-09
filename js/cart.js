@@ -2,6 +2,46 @@
    CART PAGE JAVASCRIPT (LOCALSTORAGE BASED)
    ============================================ */
 
+// Initialize cart with default items if empty
+let cart = [
+    {
+        id: "iphone15",
+        name: "Apple iPhone 15 (Blue, 128 GB)",
+        image: "../images/products/iphone.png",
+        price: 69999,
+        originalPrice: 79999,
+        quantity: 1,
+        color: "Blue, 128 GB",
+        seller: "Apple Store",
+        delivery: "Tomorrow"
+    },
+    {
+        id: "delllaptop",
+        name: "Dell Inspiron Laptop (16 GB RAM)",
+        image: "../images/products/laptop.png",
+        price: 58999,
+        originalPrice: 64999,
+        quantity: 1,
+        color: "Silver, 16 GB RAM",
+        seller: "Dell Official",
+        delivery: "Tomorrow"
+    },
+    {
+        id: "samsung",
+        name: "Samsung Galaxy S23 (Green, 256 GB)",
+        image: "../images/products/samsung.png",
+        price: 54999,
+        originalPrice: 59999,
+        quantity: 1,
+        color: "Green, 256 GB",
+        seller: "Samsung Store",
+        delivery: "Tomorrow"
+    }
+];
+
+// Save to localStorage
+localStorage.setItem("cart", JSON.stringify(cart));
+
 let cartItems = JSON.parse(localStorage.getItem("cart")) || [];
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -80,23 +120,26 @@ function renderCartItems() {
 function updatePriceDetails() {
     let totalItems = 0;
     let totalPrice = 0;
+    let totalOriginalPrice = 0;
 
     cartItems.forEach(item => {
         totalItems += item.quantity;
         totalPrice += item.price * item.quantity;
+        totalOriginalPrice += (item.originalPrice || item.price) * item.quantity;
     });
 
     const platformFee = cartItems.length > 0 ? 7 : 0;
+    const discount = totalOriginalPrice - totalPrice;
 
     document.getElementById("itemCount").textContent = totalItems;
     document.getElementById("itemPlural").style.display =
         totalItems === 1 ? "none" : "inline";
 
     document.getElementById("totalPrice").textContent =
-        `₹${totalPrice.toLocaleString()}`;
+        `₹${totalOriginalPrice.toLocaleString()}`;
 
     document.getElementById("totalDiscount").textContent =
-        "−₹0";
+        `−₹${discount.toLocaleString()}`;
 
     document.getElementById("platformFee").textContent =
         `₹${platformFee}`;
@@ -105,7 +148,7 @@ function updatePriceDetails() {
         `₹${(totalPrice + platformFee).toLocaleString()}`;
 
     document.getElementById("savingsMessage").textContent =
-        "Enjoy your shopping!";
+        discount > 0 ? `You will save ₹${discount.toLocaleString()} on this order` : "Enjoy your shopping!";
 }
 
 /* ================= QUANTITY ================= */
