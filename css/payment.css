@@ -7,7 +7,7 @@ body { font-family: Roboto, Arial, sans-serif; background: #f1f3f6; color: #2121
 /* Header */
 .flipkart-header { background: #448ed8; border-bottom: 1px solid #d6e4ff; position: sticky; top: 0; z-index: 1000; }
 .header-container { max-width: 1248px; margin: 0 auto; height: 64px; display: flex; align-items: center; padding: 0 16px; }
-.logo-img { height: 40px; }
+.logo-img { height: 100px; }
 
 /* Payment Content */
 .payment-content { background: #fff; border-radius: 2px; box-shadow: 0 1px 1px rgba(0,0,0,0.08); padding: 24px; }
