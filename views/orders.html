@@ -9,7 +9,7 @@
 </head>
 <body>
 
-    <!-- HEADER -->
+    <!-- ================= HEADER ================= -->
     <header class="flipkart-header">
         <div class="header-container">
             <div class="logo-section">
@@ -17,118 +17,156 @@
                     <img src="../images/logo.png" class="logo-img" alt="logo">
                 </a>
             </div>
+
             <div class="nav-actions">
                 <a href="home.html" class="nav-item">
-                    <i class="fa-solid fa-house"></i><span>Home</span>
+                    <i class="fa-solid fa-house"></i>
+                    <span>Home</span>
                 </a>
                 <a href="cart.html" class="nav-item">
-                    <i class="fa-solid fa-cart-shopping"></i><span>Cart</span>
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span>Cart</span>
                 </a>
                 <a href="orders.html" class="nav-item active">
-                    <i class="fa-solid fa-box"></i><span>Orders</span>
+                    <i class="fa-solid fa-box"></i>
+                    <span>Orders</span>
                 </a>
             </div>
         </div>
     </header>
 
-    <!-- MAIN -->
+    <!-- ================= MAIN CONTENT ================= -->
     <section class="orders-main">
-
+        
+        <!-- Page Header -->
         <div class="page-header">
             <div class="header-left">
                 <h1><i class="fa-solid fa-box"></i> My Orders</h1>
                 <p id="orders-count">Loading orders...</p>
             </div>
             <div class="header-right">
-                <input type="text" id="search-orders" placeholder="Search orders..." class="search-input">
+                <input type="text" id="search-orders" placeholder="Search your orders..." class="search-input">
             </div>
         </div>
 
         <div class="orders-container">
-
-            <!-- Filters Sidebar -->
+            
+            <!-- Left: Filters -->
             <aside class="orders-sidebar">
                 <div class="filter-card">
                     <h3>Filters</h3>
-
+                    
                     <div class="filter-group">
                         <h4>Order Status</h4>
                         <label class="filter-option">
-                            <input type="radio" name="status" value="all" checked onchange="applyFilters()"> All Orders
+                            <input type="radio" name="status" value="all" checked onchange="filterOrders()">
+                            <span>All Orders</span>
                         </label>
                         <label class="filter-option">
-                            <input type="radio" name="status" value="processing" onchange="applyFilters()"> Processing
+                            <input type="radio" name="status" value="processing" onchange="filterOrders()">
+                            <span>Processing</span>
                         </label>
                         <label class="filter-option">
-                            <input type="radio" name="status" value="shipped" onchange="applyFilters()"> Shipped
+                            <input type="radio" name="status" value="shipped" onchange="filterOrders()">
+                            <span>Shipped</span>
                         </label>
                         <label class="filter-option">
-                            <input type="radio" name="status" value="delivered" onchange="applyFilters()"> Delivered
+                            <input type="radio" name="status" value="delivered" onchange="filterOrders()">
+                            <span>Delivered</span>
                         </label>
                         <label class="filter-option">
-                            <input type="radio" name="status" value="cancelled" onchange="applyFilters()"> Cancelled
+                            <input type="radio" name="status" value="cancelled" onchange="filterOrders()">
+                            <span>Cancelled</span>
                         </label>
                     </div>
 
                     <div class="filter-group">
-                        <h4>Time Period</h4>
+                        <h4>Order Time</h4>
                         <label class="filter-option">
-                            <input type="radio" name="time" value="30" checked onchange="applyFilters()"> Last 30 days
+                            <input type="radio" name="time" value="30" checked onchange="filterOrders()">
+                            <span>Last 30 days</span>
                         </label>
                         <label class="filter-option">
-                            <input type="radio" name="time" value="90" onchange="applyFilters()"> Last 3 months
+                            <input type="radio" name="time" value="90" onchange="filterOrders()">
+                            <span>Last 3 months</span>
                         </label>
                         <label class="filter-option">
-                            <input type="radio" name="time" value="180" onchange="applyFilters()"> Last 6 months
+                            <input type="radio" name="time" value="180" onchange="filterOrders()">
+                            <span>Last 6 months</span>
                         </label>
                         <label class="filter-option">
-                            <input type="radio" name="time" value="3650" onchange="applyFilters()"> All time
+                            <input type="radio" name="time" value="365" onchange="filterOrders()">
+                            <span>Last year</span>
                         </label>
                     </div>
 
-                    <button class="clear-btn" onclick="clearFilters()">
-                        <i class="fa-solid fa-xmark"></i> Clear Filters
-                    </button>
+                    <button class="clear-filters-btn" onclick="clearFilters()">Clear All Filters</button>
                 </div>
             </aside>
 
-            <!-- Orders List -->
+            <!-- Right: Orders List -->
             <div class="orders-list-section">
-                <div id="orders-list"></div>
+                
+                <!-- Orders will be dynamically inserted here -->
+                <div id="orders-list">
+                    <div class="loading-message">
+                        <i class="fa-solid fa-spinner fa-spin"></i>
+                        <p>Loading your orders...</p>
+                    </div>
+                </div>
+
+                <!-- Empty State (hidden by default) -->
                 <div id="empty-orders" class="empty-state" style="display:none;">
                     <i class="fa-solid fa-box-open"></i>
                     <h2>No Orders Found</h2>
                     <p>You haven't placed any orders yet.</p>
-                    <a href="home.html" class="btn-shop">Start Shopping</a>
+                    <a href="home.html" class="btn-shop-now">Start Shopping</a>
                 </div>
+
             </div>
 
         </div>
+
     </section>
 
-    <!-- FOOTER -->
+    <!-- ================= FOOTER ================= -->
     <footer class="flipkart-footer">
         <div class="footer-container">
             <div class="footer-column">
                 <h4>ABOUT</h4>
-                <ul><li><a href="#">Contact Us</a></li><li><a href="#">About Us</a></li></ul>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">About Us</a></li>
+                </ul>
             </div>
             <div class="footer-column">
                 <h4>HELP</h4>
-                <ul><li><a href="#">Payments</a></li><li><a href="#">Shipping</a></li></ul>
+                <ul>
+                    <li><a href="#">Payments</a></li>
+                    <li><a href="#">Shipping</a></li>
+                </ul>
             </div>
             <div class="footer-column">
                 <h4>POLICY</h4>
-                <ul><li><a href="#">Return Policy</a></li><li><a href="#">Terms Of Use</a></li></ul>
+                <ul>
+                    <li><a href="#">Return Policy</a></li>
+                    <li><a href="#">Terms Of Use</a></li>
+                </ul>
             </div>
             <div class="footer-column">
                 <h4>SOCIAL</h4>
-                <ul><li><a href="#">Facebook</a></li><li><a href="#">Twitter</a></li></ul>
+                <ul>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                </ul>
             </div>
         </div>
-        <div class="footer-bottom"><p>© 2026 E-Commerce Platform</p></div>
+        <div class="footer-bottom">
+            <p>© 2026 E-Commerce Platform</p>
+        </div>
     </footer>
 
+    <!-- JavaScript -->
     <script src="../js/orders.js"></script>
 </body>
 </html>
