@@ -1,191 +1,195 @@
 /* ============================================
-   ORDER PLACED PAGE JS (CONNECTED VERSION)
+   ORDER PLACED PAGE JS (STANDALONE)
 ============================================ */
 
-let orderData = null;
-
 document.addEventListener("DOMContentLoaded", () => {
-    loadOrderData();
-    renderOrderDetails();
-    initAnimations();
-    initEventListeners();
-    initConfetti();
-
-    setTimeout(() => {
-        showNotification("Order confirmation email sent!", "success");
-    }, 1000);
+    console.log("=== ORDER PLACED PAGE LOADED ===");
+    loadAndRenderOrder();
 });
 
-/* ================= LOAD ORDER ================= */
+/* ================= MAIN LOAD FUNCTION ================= */
 
-function loadOrderData() {
-    const savedOrder = localStorage.getItem("lastOrder");
+function loadAndRenderOrder() {
+    const rawOrder = localStorage.getItem("lastOrder");
+    console.log("Raw order from localStorage:", rawOrder);
 
-    if (!savedOrder) {
+    if (!rawOrder) {
+        console.error("❌ No order found in localStorage");
         alert("No order found. Redirecting to home.");
         window.location.href = "home.html";
         return;
     }
 
     try {
-        orderData = JSON.parse(savedOrder);
+        const orderData = JSON.parse(rawOrder);
+        console.log("✅ ORDER DATA:", orderData);
+        console.log("Order ID:", orderData.orderId);
+        console.log("Items count:", orderData.items?.length);
+
+        renderBasicDetails(orderData);
+        renderAddress(orderData);
+        renderOrderItems(orderData);
+        renderPriceSummary(orderData);
+        renderEmail();
     } catch (e) {
-        console.error("Failed to parse order:", e);
+        console.error("❌ Failed to parse order:", e);
+        alert("Error loading order. Redirecting to home.");
         window.location.href = "home.html";
     }
 }
 
-/* ================= RENDER ORDER ================= */
+/* ================= BASIC DETAILS ================= */
 
-function renderOrderDetails() {
-    /* ===== BASIC DETAILS ===== */
-    setText("order-id", orderData.orderId);
-    setText("order-date", orderData.orderDate);
-    setText("payment-method", orderData.paymentMethod);
-    setText("order-total", orderData.total);
+function renderBasicDetails(order) {
+    console.log("--- Rendering basic details ---");
+    setText("order-id", order.orderId);
+    setText("payment-method", order.paymentMethod);
+    setText("order-total", order.total);
+    setText("transaction-id", order.transactionId);
+    setText("payment-date", order.orderDate);
+    setText("order-date-timeline", order.orderDate);
+    console.log("✅ Basic details rendered");
+}
 
-    /* ===== ADDRESS ===== */
-    if (orderData.address) {
-        setText("cust-name", orderData.address.name || "");
-        setText(
-            "cust-address",
-            `${orderData.address.address || ""}, ${orderData.address.city || ""}, ${orderData.address.state || ""} - ${orderData.address.pincode || ""}`
-        );
-        setText("cust-phone", orderData.address.phone || "");
+/* ================= ADDRESS ================= */
+
+function renderAddress(order) {
+    console.log("--- Rendering address ---");
+    
+    if (!order.address) {
+        console.warn("⚠️ No address in order data");
+        return;
     }
 
-    /* ===== ITEMS ===== */
-    const itemsContainer = document.getElementById("ordered-items");
-    if (!itemsContainer) return;
+    setText("cust-name", order.address.name);
+    setText("cust-address", 
+        `${order.address.address}, ${order.address.city}, ${order.address.state} - ${order.address.pincode}`
+    );
+    setText("cust-phone", order.address.phone);
+    console.log("✅ Address rendered");
+}
 
-    itemsContainer.innerHTML = "";
+/* ================= ORDER ITEMS ================= */
 
-    orderData.items.forEach(item => {
+function renderOrderItems(order) {
+    console.log("--- Rendering order items ---");
+    const container = document.getElementById("order-items");
+
+    if (!container) {
+        console.error("❌ #order-items container NOT FOUND in HTML");
+        console.log("Available IDs:", Array.from(document.querySelectorAll('[id]')).map(el => el.id));
+        return;
+    }
+
+    console.log("✅ Container found:", container);
+
+    if (!order.items || order.items.length === 0) {
+        console.warn("⚠️ No items in order");
+        container.innerHTML = `<p style="color:#878787;padding:16px;">No items found</p>`;
+        return;
+    }
+
+    console.log(`📦 Rendering ${order.items.length} items...`);
+    container.innerHTML = "";
+
+    order.items.forEach((item, index) => {
+        console.log(`Item ${index + 1}:`, item);
+
         const div = document.createElement("div");
-        div.className = "ordered-item";
+        div.className = "order-item";
 
         div.innerHTML = `
-            <img src="${item.image}" alt="${item.name}">
+            <img src="${item.image}" alt="${item.name}"
+                 onerror="this.src='../images/products/samsung.png'">
             <div class="item-info">
-                <h4>${item.name}</h4>
-                <p>Qty: ${item.quantity}</p>
-                <p class="price">₹${(item.price * item.quantity).toLocaleString()}</p>
+                <h3>${item.name}</h3>
+                ${item.variant ? `<p>${item.variant}</p>` : ""}
+                <p>Quantity: ${item.quantity}</p>
+            </div>
+            <div class="item-price">
+                <strong>₹${(item.price * item.quantity).toLocaleString()}</strong>
             </div>
         `;
 
-        itemsContainer.appendChild(div);
+        container.appendChild(div);
+        console.log(`✅ Item ${index + 1} added to DOM`);
     });
+
+    console.log("🎉 ALL ITEMS RENDERED SUCCESSFULLY!");
 }
 
-/* ================= HELPERS ================= */
+/* ================= PRICE SUMMARY ================= */
+
+function renderPriceSummary(order) {
+    console.log("--- Rendering price summary ---");
+    
+    if (!order.items || order.items.length === 0) return;
+
+    let subtotal = 0;
+    let itemCount = 0;
+
+    order.items.forEach(item => {
+        const qty = item.quantity || 1;
+        subtotal += item.price * qty;
+        itemCount += qty;
+    });
+
+    setText("subtotal-items", itemCount);
+    setText("subtotal-price", `₹${subtotal.toLocaleString()}`);
+    setText("total-paid", `₹${subtotal.toLocaleString()}`);
+    
+    console.log("✅ Price summary rendered");
+}
+
+/* ================= EMAIL ================= */
+
+function renderEmail() {
+    console.log("--- Rendering email ---");
+    
+    // Try to get email from order data first
+    const orderData = JSON.parse(localStorage.getItem("lastOrder"));
+    let email = orderData?.email;
+    
+    // If not in order data, try localStorage
+    if (!email) {
+        email = localStorage.getItem("checkoutEmail") || 
+                localStorage.getItem("userEmail") || 
+                "customer@email.com";
+    }
+    
+    setText("customer-email", email);
+    console.log("✅ Email set to:", email);
+}
+
+/* ================= HELPER FUNCTIONS ================= */
 
 function setText(id, value) {
     const el = document.getElementById(id);
-    if (el) el.textContent = value;
-}
-
-/* ================= ANIMATIONS ================= */
-
-function initAnimations() {
-    const sections = document.querySelectorAll(".fade-section");
-    sections.forEach((el, i) => {
-        el.style.opacity = "0";
-        el.style.transform = "translateY(20px)";
-        setTimeout(() => {
-            el.style.transition = "all 0.5s ease";
-            el.style.opacity = "1";
-            el.style.transform = "translateY(0)";
-        }, i * 120);
-    });
-}
-
-/* ================= EVENTS ================= */
-
-function initEventListeners() {
-    const trackBtn = document.getElementById("track-order-btn");
-    if (trackBtn) {
-        trackBtn.addEventListener("click", () => {
-            alert(`Tracking will be available once shipped.\nOrder ID: ${orderData.orderId}`);
-        });
-    }
-
-    const invoiceBtn = document.getElementById("invoice-btn");
-    if (invoiceBtn) {
-        invoiceBtn.addEventListener("click", downloadInvoice);
-    }
-
-    const homeBtn = document.getElementById("continue-shopping-btn");
-    if (homeBtn) {
-        homeBtn.addEventListener("click", () => {
-            window.location.href = "home.html";
-        });
+    if (el) {
+        el.textContent = value || "—";
+        console.log(`Set #${id} = ${value}`);
+    } else {
+        console.warn(`⚠️ Element #${id} not found`);
     }
 }
 
-/* ================= INVOICE ================= */
+/* ================= BUTTON ACTIONS ================= */
+
+function trackOrder() {
+    const orderId = document.getElementById("order-id").textContent;
+    alert(`Tracking will be available once shipped.\nOrder ID: ${orderId}`);
+}
 
 function downloadInvoice() {
-    alert(`Invoice for ${orderData.orderId} downloaded`);
-    showNotification("Invoice downloaded", "success");
+    const orderId = document.getElementById("order-id").textContent;
+    alert(`Invoice for order ${orderId} will be downloaded`);
+    console.log("📄 Invoice download requested for:", orderId);
 }
 
-/* ================= NOTIFICATION ================= */
+/* ================= GLOBAL FUNCTIONS ================= */
 
-function showNotification(message, type = "info") {
-    const n = document.createElement("div");
-    n.style.cssText = `
-        position: fixed;
-        top: 90px;
-        right: 20px;
-        background: ${type === "success" ? "#388e3c" : "#2874f0"};
-        color: #fff;
-        padding: 14px 20px;
-        border-radius: 4px;
-        z-index: 9999;
-        font-size: 14px;
-    `;
-    n.textContent = message;
-    document.body.appendChild(n);
+// Make functions available globally for onclick handlers
+window.trackOrder = trackOrder;
+window.downloadInvoice = downloadInvoice;
 
-    setTimeout(() => n.remove(), 3000);
-}
-
-/* ================= CONFETTI ================= */
-
-function initConfetti() {
-    const colors = ["#2874f0", "#ff9f00", "#388e3c"];
-
-    for (let i = 0; i < 40; i++) {
-        setTimeout(() => {
-            const c = document.createElement("div");
-            c.style.cssText = `
-                position: fixed;
-                top: -10px;
-                left: ${Math.random() * 100}%;
-                width: 8px;
-                height: 8px;
-                background: ${colors[Math.floor(Math.random() * colors.length)]};
-                animation: fall 3s linear;
-                z-index: 9999;
-            `;
-            document.body.appendChild(c);
-            setTimeout(() => c.remove(), 3000);
-        }, i * 60);
-    }
-}
-
-/* ================= STYLES ================= */
-
-const style = document.createElement("style");
-style.textContent = `
-@keyframes fall {
-    to {
-        transform: translateY(100vh) rotate(720deg);
-        opacity: 0;
-    }
-}
-`;
-document.head.appendChild(style);
-
-console.log("✅ Order placed page loaded");
-console.log("ORDER DATA:", orderData);
+console.log("✅ Order placed page script fully loaded");
