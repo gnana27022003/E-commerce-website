@@ -10,7 +10,7 @@ body {font-family:Roboto,Arial,sans-serif;background:#f1f3f6;color:#212121;}
 .flipkart-header {background:#448ed8;position:sticky;top:0;z-index:1000;box-shadow:0 2px 4px rgba(0,0,0,0.1);}
 .header-container {max-width:1248px;margin:0 auto;height:64px;display:flex;align-items:center;padding:0 16px;}
 .logo-section a {display:block;}
-.logo-img {height:40px;width:auto;}
+.logo-img {height:100px;width:auto;}
 
 /* === PAGE WRAPPER === */
 .order-placed-main {width:100%;background:#f1f3f6;padding:16px 10px;min-height:calc(100vh - 200px);}
@@ -146,3 +146,4 @@ body {font-family:Roboto,Arial,sans-serif;background:#f1f3f6;color:#212121;}
     .footer-container {grid-template-columns:1fr;}
     .order-placed-main {padding:8px 5px;}
 }
+
