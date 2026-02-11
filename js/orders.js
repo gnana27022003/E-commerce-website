@@ -1,96 +1,65 @@
 /* ============================================
-   ORDERS PAGE JS - CLEAN VERSION
+   ORDERS PAGE JS - ULTRA CONCISE
 ============================================ */
 
-let allOrders = [];
-let filteredOrders = [];
+let all = [], filt = [];
 
 document.addEventListener("DOMContentLoaded", () => {
-    loadAllOrders();
-    initSearchFilter();
+    load();
+    initSearch();
 });
 
-/* ================= LOAD ALL ORDERS ================= */
-function loadAllOrders() {
-    // Load order history
+/* LOAD */
+function load() {
     try {
         const h = localStorage.getItem("orderHistory");
-        allOrders = h ? JSON.parse(h) : [];
-    } catch(e) { allOrders = []; }
+        all = h ? JSON.parse(h) : [];
+    } catch(e) { all = []; }
 
-    // Merge lastOrder if not already in history
     try {
-        const last = localStorage.getItem("lastOrder");
-        if (last) {
-            const o = JSON.parse(last);
-            if (!allOrders.some(x => x.orderId === o.orderId)) {
+        const l = localStorage.getItem("lastOrder");
+        if (l) {
+            const o = JSON.parse(l);
+            if (!all.some(x => x.orderId === o.orderId)) {
                 o.status = o.status || "processing";
                 o.deliveryDate = o.deliveryDate || getDate(5);
-                allOrders.unshift(o);
-                saveHistory();
+                all.unshift(o);
+                save();
             }
         }
     } catch(e) {}
 
-    // Use sample data if still empty
-    if (allOrders.length === 0) {
-        allOrders = getSampleOrders();
-        saveHistory();
+    if (all.length === 0) {
+        all = sample();
+        save();
     }
 
-    filteredOrders = [...allOrders];
-    renderOrders();
+    filt = [...all];
+    render();
     updateCount();
 }
 
-/* ================= SAMPLE ORDERS ================= */
-function getSampleOrders() {
-    const today = new Date();
+/* SAMPLE */
+function sample() {
+    const t = new Date();
     const fmt = d => `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
-    const d1 = new Date(today); d1.setDate(today.getDate() - 2);
-    const d2 = new Date(today); d2.setDate(today.getDate() - 7);
-    const d3 = new Date(today); d3.setDate(today.getDate() - 14);
+    const d1 = new Date(t); d1.setDate(t.getDate() - 2);
+    const d2 = new Date(t); d2.setDate(t.getDate() - 7);
+    const d3 = new Date(t); d3.setDate(t.getDate() - 14);
 
     return [
-        {
-            orderId: "ORD" + Date.now(),
-            orderDate: fmt(d1),
-            paymentMethod: "UPI",
-            total: "₹69,999",
-            status: "delivered",
-            deliveryDate: fmt(today),
-            address: { name: "Sample Customer", address: "123 Main St", city: "Bengaluru", state: "Karnataka", pincode: "560001", phone: "+91 9876543210" },
-            items: [{ name: "Apple iPhone 15 (Blue, 128 GB)", image: "../images/products/Iphone15.png", price: 69999, quantity: 1, variant: "Blue, 128 GB" }]
-        },
-        {
-            orderId: "ORD" + (Date.now() - 1),
-            orderDate: fmt(d2),
-            paymentMethod: "Credit Card",
-            total: "₹58,999",
-            status: "shipped",
-            deliveryDate: getDate(3),
-            address: { name: "Sample Customer", address: "123 Main St", city: "Bengaluru", state: "Karnataka", pincode: "560001", phone: "+91 9876543210" },
-            items: [{ name: "Dell Inspiron Laptop (16 GB RAM)", image: "../images/products/laptop.png", price: 58999, quantity: 1, variant: "Silver, 16 GB" }]
-        },
-        {
-            orderId: "ORD" + (Date.now() - 2),
-            orderDate: fmt(d3),
-            paymentMethod: "UPI",
-            total: "₹54,999",
-            status: "processing",
-            deliveryDate: getDate(5),
-            address: { name: "Sample Customer", address: "123 Main St", city: "Bengaluru", state: "Karnataka", pincode: "560001", phone: "+91 9876543210" },
-            items: [{ name: "Samsung Galaxy S23 (Green, 256 GB)", image: "../images/products/samsung.png", price: 54999, quantity: 1, variant: "Green, 256 GB" }]
-        }
+        {orderId:"ORD"+Date.now(), orderDate:fmt(d1), paymentMethod:"UPI", total:"₹69,999", status:"delivered", deliveryDate:fmt(t), address:{name:"Sample Customer",address:"123 Main St",city:"Bengaluru",state:"Karnataka",pincode:"560001",phone:"+91 9876543210"}, items:[{name:"Apple iPhone 15 (Blue, 128 GB)",image:"../images/products/Iphone15.png",price:69999,quantity:1,variant:"Blue, 128 GB"}]},
+        {orderId:"ORD"+(Date.now()-1), orderDate:fmt(d2), paymentMethod:"Credit Card", total:"₹58,999", status:"shipped", deliveryDate:getDate(3), address:{name:"Sample Customer",address:"123 Main St",city:"Bengaluru",state:"Karnataka",pincode:"560001",phone:"+91 9876543210"}, items:[{name:"Dell Inspiron Laptop (16 GB RAM)",image:"../images/products/laptop.png",price:58999,quantity:1,variant:"Silver, 16 GB"}]},
+        {orderId:"ORD"+(Date.now()-2), orderDate:fmt(d3), paymentMethod:"UPI", total:"₹54,999", status:"processing", deliveryDate:getDate(5), address:{name:"Sample Customer",address:"123 Main St",city:"Bengaluru",state:"Karnataka",pincode:"560001",phone:"+91 9876543210"}, items:[{name:"Samsung Galaxy S23 (Green, 256 GB)",image:"../images/products/samsung.png",price:54999,quantity:1,variant:"Green, 256 GB"}]}
     ];
 }
 
-/* ================= RENDER ORDERS ================= */
-function renderOrders() {
+/* RENDER */
+function render() {
     const list = document.getElementById("orders-list");
     const empty = document.getElementById("empty-orders");
 
-    if (filteredOrders.length === 0) {
+    if (filt.length === 0) {
         list.innerHTML = "";
         empty.style.display = "block";
         return;
@@ -98,82 +67,78 @@ function renderOrders() {
     empty.style.display = "none";
     list.innerHTML = "";
 
-    filteredOrders.forEach(order => {
-        const card = document.createElement("div");
-        card.className = "order-card";
+    filt.forEach(o => {
+        const icons = {processing:"fa-gear", shipped:"fa-truck", delivered:"fa-circle-check", cancelled:"fa-circle-xmark"};
+        const icon = icons[o.status] || "fa-gear";
+        const label = o.status ? o.status[0].toUpperCase() + o.status.slice(1) : "Processing";
 
-        const statusIcon = { processing:"fa-gear", shipped:"fa-truck", delivered:"fa-circle-check", cancelled:"fa-circle-xmark" };
-        const icon = statusIcon[order.status] || "fa-gear";
-        const label = order.status ? order.status[0].toUpperCase() + order.status.slice(1) : "Processing";
-
-        const itemsHTML = order.items.map(item => `
+        const items = o.items.map(i => `
             <div class="order-item">
-                <img src="${item.image}" alt="${item.name}" onerror="this.src='../images/products/samsung.png'">
+                <img src="${i.image}" alt="${i.name}" onerror="this.src='../images/products/samsung.png'">
                 <div class="order-item-info">
-                    <h4>${item.name}</h4>
-                    ${item.variant ? `<p>${item.variant}</p>` : ""}
-                    <p>Qty: ${item.quantity}</p>
+                    <h4>${i.name}</h4>
+                    ${i.variant ? `<p>${i.variant}</p>` : ""}
+                    <p>Qty: ${i.quantity}</p>
                 </div>
                 <div class="order-item-price">
-                    <div class="price">₹${(item.price * item.quantity).toLocaleString()}</div>
+                    <div class="price">₹${(i.price * i.quantity).toLocaleString()}</div>
                 </div>
             </div>
         `).join("");
 
-        const deliveryHTML = order.status === "delivered"
-            ? `<div class="delivery-info delivered"><i class="fa-solid fa-circle-check"></i> Delivered on ${order.deliveryDate}</div>`
-            : order.status === "shipped"
-            ? `<div class="delivery-info"><i class="fa-solid fa-truck"></i> Expected by ${order.deliveryDate}</div>`
-            : order.status === "processing"
-            ? `<div class="delivery-info"><i class="fa-solid fa-clock"></i> Expected by ${order.deliveryDate}</div>`
+        const delivery = o.status === "delivered"
+            ? `<div class="delivery-info delivered"><i class="fa-solid fa-circle-check"></i> Delivered on ${o.deliveryDate}</div>`
+            : o.status === "shipped"
+            ? `<div class="delivery-info"><i class="fa-solid fa-truck"></i> Expected by ${o.deliveryDate}</div>`
+            : o.status === "processing"
+            ? `<div class="delivery-info"><i class="fa-solid fa-clock"></i> Expected by ${o.deliveryDate}</div>`
             : `<div class="delivery-info"><i class="fa-solid fa-circle-xmark"></i> Cancelled</div>`;
 
-        const actionHTML = order.status === "delivered"
-            ? `<button class="order-btn btn-invoice" onclick="downloadInvoice('${order.orderId}')"><i class="fa-solid fa-file-invoice"></i> Invoice</button>`
-            : order.status === "shipped"
-            ? `<button class="order-btn btn-track" onclick="trackOrder('${order.orderId}')"><i class="fa-solid fa-location-dot"></i> Track</button>`
-            : order.status === "processing"
-            ? `<button class="order-btn btn-track" onclick="trackOrder('${order.orderId}')"><i class="fa-solid fa-location-dot"></i> Track</button>
-               <button class="order-btn btn-cancel" onclick="cancelOrder('${order.orderId}')"><i class="fa-solid fa-xmark"></i> Cancel</button>`
+        const actions = o.status === "delivered"
+            ? `<button class="order-btn btn-invoice" onclick="downloadInvoice('${o.orderId}')"><i class="fa-solid fa-file-invoice"></i> Invoice</button>`
+            : o.status === "shipped"
+            ? `<button class="order-btn btn-track" onclick="trackOrder('${o.orderId}')"><i class="fa-solid fa-location-dot"></i> Track</button>`
+            : o.status === "processing"
+            ? `<button class="order-btn btn-track" onclick="trackOrder('${o.orderId}')"><i class="fa-solid fa-location-dot"></i> Track</button><button class="order-btn btn-cancel" onclick="cancelOrder('${o.orderId}')"><i class="fa-solid fa-xmark"></i> Cancel</button>`
             : "";
 
+        const card = document.createElement("div");
+        card.className = "order-card";
         card.innerHTML = `
             <div class="order-header">
                 <div class="order-header-left">
-                    <div class="order-id">Order: <span>${order.orderId}</span></div>
-                    <div class="order-date"><i class="fa-solid fa-calendar-days"></i> ${order.orderDate}</div>
-                    <span class="status-badge ${order.status || 'processing'}">
+                    <div class="order-id">Order: <span>${o.orderId}</span></div>
+                    <div class="order-date"><i class="fa-solid fa-calendar-days"></i> ${o.orderDate}</div>
+                    <span class="status-badge ${o.status || 'processing'}">
                         <i class="fa-solid ${icon}"></i> ${label}
                     </span>
                 </div>
-                <div class="order-total">${order.total}</div>
+                <div class="order-total">${o.total}</div>
             </div>
             <div class="order-body">
-                <div class="order-items-list">${itemsHTML}</div>
-                <div class="order-meta">${deliveryHTML}</div>
+                <div class="order-items-list">${items}</div>
+                <div class="order-meta">${delivery}</div>
             </div>
             <div class="order-footer">
-                <button class="order-btn btn-view" onclick="viewOrder('${order.orderId}')">
-                    <i class="fa-solid fa-eye"></i> View Details
-                </button>
-                ${actionHTML}
+                <button class="order-btn btn-view" onclick="viewOrder('${o.orderId}')"><i class="fa-solid fa-eye"></i> View Details</button>
+                ${actions}
             </div>
         `;
         list.appendChild(card);
     });
 }
 
-/* ================= FILTERS ================= */
+/* FILTERS */
 function applyFilters() {
-    const status = document.querySelector('input[name="status"]:checked').value;
-    const days = parseInt(document.querySelector('input[name="time"]:checked').value);
+    const s = document.querySelector('input[name="status"]:checked').value;
+    const d = parseInt(document.querySelector('input[name="time"]:checked').value);
 
-    filteredOrders = allOrders.filter(order => {
-        if (status !== "all" && order.status !== status) return false;
-        const diff = Math.floor((new Date() - new Date(order.orderDate)) / 86400000);
-        return diff <= days;
+    filt = all.filter(o => {
+        if (s !== "all" && o.status !== s) return false;
+        const diff = Math.floor((new Date() - new Date(o.orderDate)) / 86400000);
+        return diff <= d;
     });
-    renderOrders();
+    render();
     updateCount();
 }
 
@@ -181,67 +146,67 @@ function clearFilters() {
     document.querySelector('input[name="status"][value="all"]').checked = true;
     document.querySelector('input[name="time"][value="3650"]').checked = true;
     document.getElementById("search-orders").value = "";
-    filteredOrders = [...allOrders];
-    renderOrders();
+    filt = [...all];
+    render();
     updateCount();
 }
 
-/* ================= SEARCH ================= */
-function initSearchFilter() {
-    const searchInput = document.getElementById("search-orders");
-    if (!searchInput) return;
+/* SEARCH */
+function initSearch() {
+    const input = document.getElementById("search-orders");
+    if (!input) return;
 
-    searchInput.addEventListener("input", e => {
+    input.addEventListener("input", e => {
         const q = e.target.value.toLowerCase();
-        filteredOrders = q === "" ? [...allOrders] : allOrders.filter(o =>
+        filt = q === "" ? [...all] : all.filter(o =>
             o.orderId.toLowerCase().includes(q) ||
             o.items.some(i => i.name.toLowerCase().includes(q))
         );
-        renderOrders();
+        render();
         updateCount();
     });
 }
 
-/* ================= HELPERS ================= */
+/* HELPERS */
 function updateCount() {
     const el = document.getElementById("orders-count");
-    const n = filteredOrders.length;
+    const n = filt.length;
     if (el) el.textContent = `${n} order${n !== 1 ? "s" : ""} found`;
 }
 
-function saveHistory() {
-    try { localStorage.setItem("orderHistory", JSON.stringify(allOrders)); } catch(e) {}
+function save() {
+    try { localStorage.setItem("orderHistory", JSON.stringify(all)); } catch(e) {}
 }
 
-function getDate(daysAhead) {
+function getDate(days) {
     const d = new Date();
-    d.setDate(d.getDate() + daysAhead);
+    d.setDate(d.getDate() + days);
     return `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
 }
 
-/* ================= ACTIONS ================= */
-function viewOrder(orderId) {
-    const order = allOrders.find(o => o.orderId === orderId);
-    if (order) {
-        localStorage.setItem("lastOrder", JSON.stringify(order));
+/* ACTIONS */
+function viewOrder(id) {
+    const o = all.find(x => x.orderId === id);
+    if (o) {
+        localStorage.setItem("lastOrder", JSON.stringify(o));
         window.location.href = "order-placed.html";
     }
 }
 
-function trackOrder(orderId) {
-    alert(`Tracking info for ${orderId}\n\nYour order is on the way!`);
+function trackOrder(id) {
+    alert(`Tracking info for ${id}\n\nYour order is on the way!`);
 }
 
-function downloadInvoice(orderId) {
-    alert(`Downloading invoice for ${orderId}`);
+function downloadInvoice(id) {
+    alert(`Downloading invoice for ${id}`);
 }
 
-function cancelOrder(orderId) {
-    if (confirm(`Cancel order ${orderId}?`)) {
-        const o = allOrders.find(x => x.orderId === orderId);
+function cancelOrder(id) {
+    if (confirm(`Cancel order ${id}?`)) {
+        const o = all.find(x => x.orderId === id);
         if (o) {
             o.status = "cancelled";
-            saveHistory();
+            save();
             applyFilters();
         }
     }
