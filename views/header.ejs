@@ -3,20 +3,20 @@
 
         <!-- LOGO -->
         <div class="logo-section">
-            <img src="/images/" class="logo-img" alt="logo">
+            <img src="/logo.png" class="logo-img" alt="logo">
         </div>
 
         <!-- NAV ACTIONS -->
         <div class="nav-actions">
-
-        <a href="<%= loggedIn ? '/profile' : '/usersignin' %>" class="nav-item">
+        <a href="/" class="nav-item">Home</a>
+        <a href="<%= loggedIn ? '/uprofile' : '/usersignin' %>" class="nav-item">
             <i class="fa-regular fa-user"></i>
 
             <span>
                 <% if (!loggedIn) { %>
                     Login / Signup
                 <% } else { %>
-                    <a href="/profile" style="text-decoration:none; color:inherit;">Profile</a>
+                    <a href="/uprofile" style="text-decoration:none; color:inherit;">Profile</a>
                     /
                     <a href="/logout" style="text-decoration:none; color:inherit;">Logout</a>
                 <% } %>
@@ -28,7 +28,7 @@
 
 
 
-            <a href="orders.html" class="nav-item">
+            <a href="/orders" class="nav-item">
                 <i class="fa-solid fa-box"></i>
                 <span>Orders</span>
             </a>

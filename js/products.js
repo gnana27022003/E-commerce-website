@@ -210,3 +210,30 @@ productCards.forEach(card => {
         this.style.transform = 'translateY(0)';
     });
 });
+
+
+document.querySelector(".btn-cart").addEventListener("click", async function () {
+
+    const productId = this.dataset.id;
+    const quantity = document.getElementById("quantity").value;
+
+    const res = await fetch("/add-to-cart", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            productId,
+            quantity
+        })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+        alert("Added to cart");
+        window.location.href = "/cart";
+    } else {
+        alert("Failed to add to cart");
+    }
+});

@@ -100,3 +100,38 @@ body { font-family: Roboto, Arial, sans-serif; background: #f1f3f6; color: #2121
     .form-row { grid-template-columns: 1fr; }
     .method-content { padding: 0 0 20px 0; }
 }
+
+.payment-method-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.payment-method-card input {
+  transform: scale(1.2);
+}
+
+.pay-action-btn {
+  background: #ff9f00;
+  color: #000;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.success-msg {
+  margin-top: 12px;
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.success-msg i {
+  margin-right: 6px;
+}

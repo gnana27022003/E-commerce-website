@@ -30,21 +30,14 @@ const shippingAddressSchema = new mongoose.Schema(
 
 const paymentSchema = new mongoose.Schema(
   {
-    transactionId: { type: String },
-    paymentGateway: { type: String }, // Razorpay / Stripe / COD
+    transactionId: { type: String, unique: true }, 
     paymentMethod: {
       type: String,
-      enum: ["card", "upi", "netbanking", "cod"],
+      enum: ["card", "upi", "cod"],
     },
 
     amountPaid: { type: Number, required: true },
     currency: { type: String, default: "INR" },
-
-    paymentStatus: {
-      type: String,
-      enum: ["pending", "paid", "failed"],
-      default: "pending",
-    },
 
     paidAt: Date,
   },
@@ -63,19 +56,16 @@ const orderSchema = new mongoose.Schema(
     shippingAddress: { type: shippingAddressSchema, required: true },
 
     payment: { type: paymentSchema, required: true },
-
-    subtotal: { type: Number, required: true },
-    shippingFee: { type: Number, default: 0 },
-    tax: { type: Number, default: 0 },
+    
     totalAmount: { type: Number, required: true },
 
     orderStatus: {
       type: String,
-      enum: ["placed", "confirmed", "shipped", "delivered", "cancelled"],
+      enum: ["placed", "shipped", "outfordelivery", "cancelled"],
       default: "placed",
     },
 
-    invoiceNumber: { type: String },
+    invoiceNumber: { type: String,unique:true },
     orderedAt: { type: Date, default: Date.now },
   },
   { timestamps: true }

@@ -55,11 +55,24 @@
       <img src="/images/no-image.png" alt="No image available">
     <% } %>
   </div>
+   <!-- Review Summary -->
+           <%
+            let totalRating = 0;
+            let totalReviews = reviews.length;
+
+            reviews.forEach(r => {
+                totalRating += r.rating;
+            });
+
+            let avgRating = totalReviews
+                ? (totalRating / totalReviews).toFixed(1)
+                : 0;
+            %>
 
   <!-- RIGHT COLUMN -->
   <div class="product-info">
     <h1><%= product.productName %></h1>
-    <div class="rating">★★★★★ 4.8 (245 Reviews)</div>
+    <div class="rating">★★★★★ <%= avgRating %> out of 5(<%= reviews.length %> Reviews)</div>
 
     <div class="price-section">
       <p class="current-price">₹<%= Math.round(0.92 * product.price) %></p>
@@ -97,19 +110,7 @@
         <section class="reviews-section">
             <h2>Customer Reviews</h2>
             
-            <!-- Review Summary -->
-           <%
-            let totalRating = 0;
-            let totalReviews = reviews.length;
-
-            reviews.forEach(r => {
-                totalRating += r.rating;
-            });
-
-            let avgRating = totalReviews
-                ? (totalRating / totalReviews).toFixed(1)
-                : 0;
-            %>
+           
 
             <div class="review-summary">
             <h3><%= avgRating %> out of 5</h3>
@@ -226,5 +227,31 @@
 
     <!-- Link to JavaScript -->
     <script src="/product.js"></script>
+
+<script>
+document.querySelectorAll(".btn-cart").forEach(button => {
+    button.addEventListener("click", async () => {
+        const productId = button.dataset.id;
+
+        try {
+            const res = await fetch("/add-to-cart", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ productId })
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                alert("Added to cart! Total items: " + data.cart.items.length);
+            } else {
+                alert(data.message || "Something went wrong");
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    });
+});
+</script>
+
 </body>
 </html>

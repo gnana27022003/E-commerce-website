@@ -11,7 +11,7 @@ async function storeUserData(req,res) {
         };
     console.log(req.body.name)
         try {
-            req.session.user=data
+            req.session.userId=data.userId
             
             await usermodel.create(data);
             console.log(data)

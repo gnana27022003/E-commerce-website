@@ -30,12 +30,6 @@ const cartSchema = new mongoose.Schema(
       index: true,
     },
 
-    sessionId: {
-      type: String,
-      default: null,
-      index: true,
-    },
-
     items: {
       type: [cartItemSchema],
       default: [],

@@ -6,7 +6,7 @@
     <title>Shopping Cart - Flipkart</title>
     
     <!-- Link to shared homepage CSS for header/footer -->
-    <link rel="stylesheet" href="../css/homepage.css">
+    <link rel="stylesheet" href="/homepage.css">
     <!-- Link to cart-specific CSS -->
     <link rel="stylesheet" href="/cart.css">
     <link rel="stylesheet" href="/homepage.css">
@@ -32,8 +32,33 @@
 
                 <!-- Cart Items -->
                 <div class="cart-items-list" id="cartItemsList">
-                    <!-- Items will be dynamically inserted here -->
+                    <% if (cartItems.length === 0) { %>
+                        <p class="empty-cart">Your cart is empty</p>
+                    <% } else { %>
+                        <% cartItems.forEach((item, index) => { %>
+                            <div class="cart-item-card">
+                                <img src="/uploads/products/<%= item.image %>" alt="<%= item.name %>" class="cart-item-image">
+                                <div class="cart-item-info">
+                                    <h4 class="cart-item-name"><%= item.name %></h4>
+                                    <p class="cart-item-price">₹<%= item.price %></p>
+                                    <p class="cart-item-quantity">Qty: <%= item.quantity %></p>
+                                    <div class="cart-item-actions">
+                                        
+                                        <button class="btn-view-product" onclick="window.location.href='/product/<%= item.productId %>'">
+                                            View Product
+                                        </button>
+                                        <button class="btn-remove-item" onclick="removeItem('<%= item.productId %>', this)">
+                                            Remove
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } %>
+
                 </div>
+
 
                 <!-- Place Order Button -->
                 <div class="place-order-section">
@@ -126,6 +151,69 @@
     </footer>
 
     <!-- Link to JavaScript -->
-    <script src="../js/cart.js"></script>
+    <script src="/cart.js"></script>
+    <script>
+        async function removeItem(index) {
+        const item = cartItems[index];
+
+        try {
+            const res = await fetch(`/cart/${item.productId}`, {
+                method: 'DELETE'
+            });
+            const result = await res.json();
+
+            if (result.success) {
+                // Remove from front-end array
+                cartItems.splice(index, 1);
+
+                // Remove element from DOM
+                const cartItemsList = document.getElementById("cartItemsList");
+                const itemCards = cartItemsList.querySelectorAll(".cart-item-card");
+                if(itemCards[index]) itemCards[index].remove();
+
+                // Update totals
+                updatePriceDetails();
+
+                if (cartItems.length === 0) {
+                    cartItemsList.innerHTML = `<p class="empty-cart">Your cart is empty</p>`;
+                }
+            } else {
+                alert(result.message || "Failed to remove item");
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Error removing item");
+        }
+    }
+    async function removeItem(productId, btn) {
+    try {
+        const res = await fetch(`/cart/${productId}`, {
+            method: "DELETE"
+        });
+
+        const result = await res.json();
+
+        if (!result.success) {
+            alert("Failed to remove item");
+            return;
+        }
+
+        // remove item card from DOM
+        const card = btn.closest(".cart-item-card");
+        card.remove();
+
+        // OPTIONAL: if no items left
+        if (document.querySelectorAll(".cart-item-card").length === 0) {
+            document.getElementById("cartItemsList").innerHTML =
+                `<p class="empty-cart">Your cart is empty</p>`;
+        }
+
+    } catch (err) {
+        console.error(err);
+        alert("Error deleting item");
+    }
+}
+
+    </script>
 </body>
 </html>

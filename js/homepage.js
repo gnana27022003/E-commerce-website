@@ -118,11 +118,6 @@ function updateCarouselButtons(carousel, leftBtn, rightBtn) {
 }
 
 /* ========== PRODUCT ITEM CLICK ========== */
-document.querySelectorAll('.product-item').forEach(item => {
-    item.addEventListener('click', function () {
-        window.location.href = 'product.html';
-    });
-});
 
 /* ========== CAROUSEL BUTTON STYLES (JS INJECTED) ========== */
 const style = document.createElement('style');

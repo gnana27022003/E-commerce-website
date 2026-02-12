@@ -72,7 +72,7 @@
                     
                     <div class="product-item">
                         <% if(product.productImages && product.productImages.length>0){%>
-                        <img src="/uploads/products/<%= product.productImages[0].filename%>" alt="product images">
+                        <img src="/uploads/products/<%= product.productImages[0].filename%>" alt="product images" onclick="location.href='/product/<%=product.productId%>'">
                         <%} else{%>
                             <img src="" alt="no image found">
                         <%}%>

@@ -12,24 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initAddToCart();
     initImageZoom();
 });
-document.querySelector(".btn-cart").addEventListener("click", async () => {
-  const quantity = Number(document.getElementById("quantity").value);
-  const productId = document
-    .querySelector(".btn-cart")
-    .dataset.id;
 
-  const res = await fetch("/cart/add", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ productId, quantity })
-  });
-
-  if (res.ok) {
-    alert("Added to cart");
-  } else {
-    alert("Login required");
-  }
-});
 /* === IMAGE GALLERY === */
 function initImageGallery() {
     const mainImage = document.getElementById('main-image');
@@ -136,60 +119,44 @@ function initOptionButtons() {
 /* === ADD TO CART FUNCTIONALITY === */
 function initAddToCart() {
     const addToCartBtn = document.querySelector('.btn-cart');
-    const buyNowBtn = document.querySelector('.btn-buy');
-    
+
     if (addToCartBtn) {
-        addToCartBtn.addEventListener('click', function(e) {
+        addToCartBtn.addEventListener('click', async function(e) {
             e.preventDefault();
-            
-            // Get selected options
-            const selectedColor = document.querySelector('.option-group:nth-child(1) .option-btn.active')?.textContent || 'Not selected';
-            const selectedStorage = document.querySelector('.option-group:nth-child(2) .option-btn.active')?.textContent || 'Not selected';
-            const quantity = document.getElementById('quantity')?.value || 1;
-            
-            console.log('Adding to cart:', {
-                color: selectedColor,
-                storage: selectedStorage,
-                quantity: quantity
-            });
-            
-            alert('Product added to cart!');
-            
-            // Navigate to checkout after showing alert
-            setTimeout(() => {
-                window.location.href = 'checkout.html';
-            }, 500);
-        });
-    }
-    
-    if (buyNowBtn) {
-        buyNowBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const selectedColor = document.querySelector('.option-group:nth-child(1) .option-btn.active')?.textContent || 'Not selected';
-            const selectedStorage = document.querySelector('.option-group:nth-child(2) .option-btn.active')?.textContent || 'Not selected';
-            const quantity = document.getElementById('quantity')?.value || 1;
-            
-            console.log('Buy now:', {
-                color: selectedColor,
-                storage: selectedStorage,
-                quantity: quantity
-            });
-            
-            alert('Proceeding to checkout...');
-            
-            setTimeout(() => {
-                window.location.href = 'checkout.html';
-            }, 500);
+
+            const productId = addToCartBtn.dataset.id; // productId from button
+            const quantity = parseInt(document.getElementById('quantity')?.value) || 1;
+
+            try {
+                const response = await fetch('/cart', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ productId, quantity })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Product added to cart!');
+                } else {
+                    alert('Failed to add to cart: ' + (result.message || 'Try again'));
+                }
+            } catch (err) {
+                console.error(err);
+                alert('Error adding to cart');
+            }
         });
     }
 }
+
 
 /* === WRITE REVIEW === */
 const writeReviewBtn = document.querySelector('.btn-write-review');
 if (writeReviewBtn) {
     writeReviewBtn.addEventListener('click', function() {
-        const reviewText = prompt('Write your review:');
+        
         if (reviewText) {
             alert('Thank you for your review!');
         }

@@ -53,7 +53,7 @@ uroute.post('/userinfo', async (req, res) => {
     if (result.success) {
 
         res.redirect('/');
-
+        
            
     } else {
         res.send('Sorry, try again later.');
@@ -72,9 +72,10 @@ uroute.post('/usersignin',async(req,res)=>{
     };
     
     const result = await validateUser(data);
-    req.session.user=result.user;
-    req.session.email=req.body.email;
+    
     if (result.success) {
+        req.session.userId=result.user.userId;
+        req.session.email=req.body.email;
         req.session.loggedIn = true;
         console.log(result.user)
         res.redirect(result.redirectTo);
@@ -175,8 +176,9 @@ uroute.post('/reset-password', async (req, res) => {
 
 
 uroute.get('/checkout', async (req, res) => {
-  const user = await usermodel.findOne({ userId: req.session.user.userId });
+  const user = await usermodel.findOne({ userId: req.session.userId });
   const product = await productmodel.findOne({productId: req.session.productId})
+  console.log(product)
   res.render('checkout', {
     addresses: user.addresses,
     selectedAddressId: req.session.selectedAddressId,
@@ -223,91 +225,11 @@ uroute.post("/deliverhere", (req, res) => {
 });
 
 
+uroute.get('/uprofile',async(req,res)=>{
+    const user = await usermodel.findOne({userId:req.session.userId})
+    res.render('uprofile',{user})
+})
 
-uroute.post("/cart/add", async (req, res) => {
-  if (!req.session.user) {
-    return res.status(401).json({ message: "Login required" });
-  }
-
-  const { productId, quantity } = req.body;
-
-  const product = await productmodel.findOne({ productId });
-  if (!product) {
-    return res.status(404).json({ message: "Product not found" });
-  }
-
-  let cart = await cartmodel.findOne({
-    userId: req.session.user._id,
-    status: "active"
-  });
-
-  if (!cart) {
-    cart = new cartmodel({
-      userId: req.session.user.userId,
-      items: []
-    });
-  }
-
-  const index = cart.items.findIndex(
-    item => item.productId === productId
-  );
-
-  if (index !== -1) {
-    cart.items[index].quantity += quantity;
-  } else {
-    cart.items.push({
-      productId,
-      quantity,
-      priceSnapshot: product.price
-    });
-  }
-
-  cart.totalAmount = cart.items.reduce(
-    (sum, item) => sum + item.quantity * item.priceSnapshot,
-    0
-  );
-
-  await cart.save();
-
-  res.json({ success: true });
-});
-
-uroute.get("/cart", async (req, res) => {
-  if (!req.session.user) {
-    return res.redirect("/usersignin");
-  }
-
-  const cart = await cartmodel.findOne({
-    userId: req.session.user._id,
-    status: "active"
-  });
-
-  if (!cart || cart.items.length === 0) {
-    return res.render("cart", { cartItems: [], total: 0 });
-  }
-
-  const products = await productmodel.find({
-    productId: { $in: cart.items.map(i => i.productId) }
-  });
-
-  const cartItems = cart.items.map(item => {
-    const product = products.find(
-      p => p.productId === item.productId
-    );
-
-    return {
-      name: product.productName,
-      image: product.productImages[0]?.filename,
-      price: item.priceSnapshot,
-      quantity: item.quantity
-    };
-  });
-
-  res.render("cart", {
-    cartItems,
-    total: cart.totalAmount
-  });
-});
 
 
 module.exports = uroute;

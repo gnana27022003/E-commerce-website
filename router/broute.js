@@ -49,15 +49,42 @@ broute.get('/products/:cat',async(req,res)=>{
 })
 
 
-broute.get('/product/:id', async(req,res)=>{
-  const product = await productmodel.findOne({productId:req.params.id})
-  const prods = await productmodel.find({category:product.category})
-  const reviews = await reviewmodel.find({ productId:product.productId }).populate('userId', 'name');
-  const message = req.session.message;
-  req.session.message = null;
-  req.session.productId = product.productId;
-  res.render('product',{product,prods,message,reviews,loggedIn: req.session.loggedIn || false})
-})
+broute.get('/product/:id', async (req, res) => {
+  try {
+    const product = await productmodel.findOne({ productId: req.params.id });
+    req.session.productId = product.productId;
+
+    if (!product) {
+      console.log("Invalid productId:", req.params.id);
+      return res.status(404).send("Page not found");
+ // or res.redirect('/')
+    }
+
+    const prods = await productmodel.find({
+      category: product.category,
+      productId: { $ne: product.productId }
+    });
+
+    const reviews = await reviewmodel
+      .find({ productId: product.productId })
+      .populate('userId', 'name');
+
+    res.render('product', {
+      product,
+      prods,
+      reviews,
+      message: req.session.message,
+      loggedIn: req.session.loggedIn || false
+    });
+
+    req.session.message = null;
+    
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
+});
+
 
 broute.get('/review/:id',async(req,res)=>{
     const productId =  req.params.id;

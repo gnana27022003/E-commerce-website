@@ -7,7 +7,7 @@ let productmodel = require('../model/productmodel');
 const { storeSellerData } = require('../sellerjs/storeSellerData');
 const { storeProductData } = require('../sellerjs/storeProductData');
 const { updateProductData } = require('../sellerjs/updateProductData');
-
+const Order = require('../model/ordermodel')
 const upload = require('../sellerjs/multer');
 
 
@@ -41,9 +41,15 @@ sroute.get('/home', async (req, res) => {
     products,
     message
   });
+
+  
 });
 
+sroute.get('/ordersdet',async(req,res)=>{
+    const orders = await Order.find({ sellerId: req.session.sellerId });
+    res.render('dashboard/orders', { orders });
 
+})
 
 sroute.get('/addprod', async (req, res) => {
   const seller = await sellermodel.findOne({ email: req.session.email });
@@ -128,6 +134,45 @@ sroute.post('/sproduct/delete/:id',async(req,res)=>{
   return res.redirect('/home');
 })
 
+
+sroute.get('/order/:id', async (req,res)=>{
+  const order = await Order.findOne({
+    orderId: req.params.id,
+    "items.sellerId": req.session.sellerId
+  })
+
+  if(!order) return res.status(404).send('Order not found')
+
+  res.render('dashboard/orderform', { order })
+})
+
+
+
+sroute.post('/order/update/:id', async (req, res) => {
+  try {
+    const allowedStatus = ['placed','shipped','outfordelivery','cancelled'];
+
+    if (!allowedStatus.includes(req.body.orderStatus)) {
+      return res.status(400).send('Invalid order status');
+    }
+
+    await Order.updateOne(
+      {
+        orderId: req.params.id,
+        "items.sellerId": req.session.sellerId
+      },
+      {
+        $set: { orderStatus: req.body.orderStatus }
+      }
+    );
+
+    return res.redirect('/ordersdet');
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Order update failed');
+  }
+});
 
 
 
