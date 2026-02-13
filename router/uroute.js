@@ -9,6 +9,7 @@ const transporter = require('../js/mailer');
 const {addAddress} = require('../userjs/addAddress')
 const cartmodel = require('../model/cartmodel')
 const productmodel = require('../model/productmodel')
+const {authMiddleware} = require('../middleware/authMiddleware')
 
 
 uroute.get('/signup', async(req,res) => {
@@ -71,7 +72,7 @@ uroute.post('/usersignin',async(req,res)=>{
         
     };
     
-    const result = await validateUser(data);
+    const result = await validateUser(data,req,res);
     
     if (result.success) {
         req.session.userId=result.user.userId;
@@ -175,9 +176,11 @@ uroute.post('/reset-password', async (req, res) => {
 });
 
 
-uroute.get('/checkout', async (req, res) => {
+uroute.get('/checkout',authMiddleware, async (req, res) => {
   const user = await usermodel.findOne({ userId: req.session.userId });
   const product = await productmodel.findOne({productId: req.session.productId})
+  const quantity = parseInt(req.query.quantity) || 1;
+  req.session.quantity = quantity;
   console.log(product)
   res.render('checkout', {
     addresses: user.addresses,
@@ -185,13 +188,14 @@ uroute.get('/checkout', async (req, res) => {
     addressConfirmed: req.session.addressConfirmed || false,
     loggedIn: req.session.loggedIn,
     product:product || null
+
   });
 });
 
 
 
 
-uroute.post('/addaddress',async(req,res)=>{
+uroute.post('/addaddress',authMiddleware,async(req,res)=>{
     const result = await addAddress(req,res);
     if(result.success){
         req.session.msg = 'Added address successfully'
@@ -206,7 +210,7 @@ uroute.post('/addaddress',async(req,res)=>{
 })
 
 
-uroute.post("/deliverhere", (req, res) => {
+uroute.post("/deliverhere",authMiddleware, (req, res) => {
   const { addressId, action } = req.body;
 
   // radio selected
@@ -225,7 +229,7 @@ uroute.post("/deliverhere", (req, res) => {
 });
 
 
-uroute.get('/uprofile',async(req,res)=>{
+uroute.get('/uprofile',authMiddleware,async(req,res)=>{
     const user = await usermodel.findOne({userId:req.session.userId})
     res.render('uprofile',{user})
 })

@@ -1,12 +1,194 @@
 <!DOCTYPE html>
-
+<html lang="en">
 <head>
-<link rel="stylesheet" href="/homepage.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Placed - E-commerce</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/order-placed.css">
+    <link rel="stylesheet" href="/homepage.css">
 </head>
 <body>
-<%- include('header') %>
 
-<h1>ORDER PLACED</h1>
+    <!-- ================= HEADER ================= -->
+    <%- include('header') %>
+<% if(!order){ %>
+    <h2>No order found</h2>
+<% } else { %>
 
+    <!-- ================= MAIN CONTENT ================= -->
+    <section class="order-placed-main">
+        
+        <!-- Success Message -->
+        <section class="success-section">
+            <div class="success-icon">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h1>Order Placed Successfully!</h1>
+            <p>Thank you for your purchase. Your order has been confirmed.</p>
+            <p class="order-number">Order Number: <strong><%= order.orderId %></strong>
+</p>
+        </section>
+
+        <div class="order-container">
+
+            <!-- Left: Order Details -->
+            <div class="order-details">
+
+                <!-- Payment Information -->
+                <section class="info-section payment-info">
+                    <h2><i class="fa-solid fa-credit-card"></i> Payment Information</h2>
+                    <div class="info-content">
+                    <p><strong>Payment Method:</strong> <%= order.payment.paymentMethod %></p>
+
+                    <p><strong>Transaction ID:</strong> 
+                        <%= order.payment.transactionId || "N/A" %>
+                    </p>
+
+                    <p><strong>Payment Status:</strong> 
+                        <%= order.payment.paymentMethod === "cod" ? "Cash on Delivery" : "Paid" %>
+                    </p>
+
+                    <p><strong>Amount Paid:</strong> 
+                        ₹<%= order.payment.amountPaid %> <%= order.payment.currency %>
+                    </p>
+
+                    <p><strong>Payment Date:</strong> 
+                        <%= order.payment.paidAt 
+                            ? order.payment.paidAt.toDateString() 
+                            : "Not Available" %>
+                    </p>
+                    </div>
+                </section>
+
+                <!-- Delivery Information -->
+                <section class="info-section delivery-info">
+                    <h2><i class="fa-solid fa-truck"></i> Delivery Information</h2>
+                    <div class="info-content">
+                        <p><strong>Delivery Address:</strong></p>
+
+                        <p>
+                            <%= order.shippingAddress.name %>
+                        </p>
+
+                        <p>
+                            <%= order.shippingAddress.addressLine %>, 
+                            <%= order.shippingAddress.locality %>, 
+                            <%= order.shippingAddress.city %>, 
+                            <%= order.shippingAddress.state %> - 
+                            <%= order.shippingAddress.pincode %>
+                        </p>
+
+                        <p>
+                            Phone: <%= order.shippingAddress.phone %>
+                        </p>
+
+                        <% if(order.shippingAddress.landmark){ %>
+                        <p>
+                            Landmark: <%= order.shippingAddress.landmark %>
+                        </p>
+                        <% } %>
+
+                    </div>
+                </section>
+
+                <!-- Order Items -->
+                <section class="info-section order-items-section">
+                    <h2><i class="fa-solid fa-list-check"></i> Order Items</h2>
+                    <% order.items.forEach(item => { %>
+
+                    <div class="order-item">
+                        <p><strong><%= item.productName %></strong></p>
+                        <p>Quantity: <%= item.quantity %></p>
+                        <p>Price per item: ₹<%= item.price %></p>
+                        <p>Total: ₹<%= item.price * item.quantity %></p>
+                        <hr>
+                    </div>
+
+                    <% }) %>
+
+                    <h3>Total Order Amount: ₹<%= order.totalAmount %></h3>
+
+                </section>
+
+            </div>
+
+            <!-- Right: Actions -->
+            <aside class="order-actions">
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h3>Quick Actions</h3>
+                    
+                    <button class="btn-action" onclick="window.location.href='/orders'">
+                        <i class="fa-solid fa-box"></i> View All Orders
+                    </button>
+                   
+                    <button class="btn-action" onclick="window.location.href='/'">
+                        <i class="fa-solid fa-bag-shopping"></i> Continue Shopping
+                    </button>
+                </div>
+
+            
+
+                <!-- Order Status Timeline -->
+                <div class="order-timeline">
+                    <h3>Order Status</h3>
+                    <ul class="timeline">
+                        <li class="completed">
+                            <strong><i class="fa-solid fa-check"></i> Order Placed</strong>
+                            <p><%= order.orderedAt.toDateString() %></p>
+
+                        </li>
+                        <li class="completed">
+                            <strong><i class="fa-solid fa-check"></i> Payment Confirmed</strong>
+                            <p>Just now</p>
+                        </li>
+                        <li class="pending">
+                            <strong><i class="fa-solid fa-gear"></i> Processing</strong>
+                            <p>In progress</p>
+                        </li>
+                        <li class="pending">
+                            <strong><i class="fa-solid fa-truck"></i> Shipped</strong>
+                            <p>Pending</p>
+                        </li>
+                        <li class="pending">
+                            <strong><i class="fa-solid fa-house"></i> Delivered</strong>
+                            <p>Pending..</p>
+                        </li>
+                    </ul>
+                </div>
+
+            </aside>
+        </div>
+
+    </section>
+<% } %>
+    <!-- ================= FOOTER ================= -->
+    <footer class="flipkart-footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h4>ABOUT</h4>
+                <ul>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">About Us</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>HELP</h4>
+                <ul>
+                    <li><a href="#">Payments</a></li>
+                    <li><a href="#">Shipping</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 E-Commerce Platform</p>
+        </div>
+    </footer>
+
+
+    <!-- JavaScript -->
+    <script src="/order-placed.js"></script>
 </body>
 </html>

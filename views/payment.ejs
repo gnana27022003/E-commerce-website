@@ -20,6 +20,7 @@
 <%- include('header') %>
 
 <!-- ================= PAYMENT CONTAINER ================= -->
+<div class="payment-layout">
 <div class="payment-wrapper">
     <div class="payment-container">
 
@@ -41,6 +42,7 @@
 
             <!-- PAYMENT METHODS -->
             <div class="payment-methods">
+                <form id="paymentForm" method="POST" action="/payment">
 
                 <!-- ===== UPI ===== -->
                 <label class="payment-method-card">
@@ -71,8 +73,8 @@
                 </div>
 
                 <!-- ACTION AREA -->
-                <form method="POST" action="/payment">
-                <input type="hidden" name="paymentMethod" id="paymentMethodInput">
+                
+               
 
                 <button type="submit" class="pay-action-btn" id="payBtn" disabled>
                     Pay Now
@@ -84,44 +86,10 @@
                 </div>
 
         </div>
+    </div>
 
         <!-- ================= RIGHT SIDEBAR ================= -->
-        <div class="price-details-sidebar">
-
-            <div class="price-details-card">
-
-                <h3>PRICE DETAILS</h3>
-
-                <!-- MRP -->
-                <div class="price-row">
-                    <span>MRP (incl. of all taxes)</span>
-                    <span>₹<%= product.price + 99 %></span>
-                </div>
-
-                <!-- FEES -->
-                <div class="price-row expandable" id="fees-toggle">
-                    <span>Fees <i class="fa-solid fa-chevron-up"></i></span>
-                </div>
-
-                <div class="fees-breakdown" id="fees-breakdown">
-                    <div class="price-row sub-row">
-                        <span>Protect Promise Fee</span>
-                        <span>₹10</span>
-                    </div>
-                </div>
-
-                
-
-                <!-- TOTAL -->
-                <div class="price-row total">
-                    <span><strong>Total Amount</strong></span>
-                    <span id="total-amoun"><strong>₹<%= product.price + 109 %></strong></span>
-                </div>
-
-            </div>
-
-        </div>
-
+    
     </div>
 </div>
 

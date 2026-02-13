@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listings Management Dashboard</title>
+    <title>Orders Management Dashboard</title>
     <link rel="stylesheet" href="style.css">
     <style>
         .product-grid {
@@ -59,40 +59,59 @@
         <!-- Content Area -->
         <main class="content-area">
             <div class="page-header">
-                <h1 class="page-title">Order Dashboard</h1>
-
-  
-
-
-
-   
+                <h1 class="page-title">Order Dashboard</h1>   
   <div class="product-grid">
 
+  <% if (orders && orders.length > 0) { %>
+
   <% orders.forEach(order => { %>
+
     <% order.items.forEach(item => { %>
 
-      <div class="product-card" onclick="location.href='/order/<%=order.orderId%>'">
+      <% if (item.sellerId == seller.sellerId) { %>
 
-        <div class="product-info">
-          <h3><%= item.productName %></h3>
+        <div class="product-card"
+             onclick="location.href='/order/<%= order.orderId %>'">
 
-          <p><strong>Product ID:</strong> <%= item.productId %></p>
+          <% if(item.productImage){ %>
+            <img src="/uploads/products/<%= item.productImage %>"
+                 alt="<%= item.productName %>">
+          <% } else { %>
+            <img src="/images/default-product.png" alt="No Image">
+          <% } %>
 
-          <p><strong>Order ID:</strong> <%= order.orderId %></p>
+          <div class="product-info">
 
-          <p><strong>Status:</strong> <%= order.orderStatus %></p>
+            <h3><%= item.productName %></h3>
 
-          <p>
-            <strong>Shipping:</strong><br>
-            <%= order.shippingAddress.name %>, <br>
-            <%= order.shippingAddress.city %> - <%= order.shippingAddress.pincode %>
-          </p>
+            <p><strong>Product ID:</strong> <%= item.productId %></p>
+
+            <p><strong>Order ID:</strong> <%= order.orderId %></p>
+
+            <p><strong>Status:</strong> <%= order.orderStatus %></p>
+
+            <p>
+              <strong>Shipping:</strong><br>
+              <%= order.shippingAddress.name %>,<br>
+              <%= order.shippingAddress.city %> - <%= order.shippingAddress.pincode %>
+            </p>
+
+          </div>
+
         </div>
 
-      </div>
+      <% } %>
 
     <% }) %>
+
   <% }) %>
+
+<% } else { %>
+
+  <h3>No orders yet.</h3>
+
+<% } %>
+
 
 </div>
 

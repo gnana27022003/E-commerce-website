@@ -5,8 +5,9 @@ const {createOrder} = require('../userjs/createOrder')
 const { createCart } = require('../userjs/createCart');
 const Cart = require('../model/cartmodel')
 const Order = require('../model/ordermodel')
+const {authMiddleware} = require('../middleware/authMiddleware')
 
-oroute.get('/payment',async(req,res)=>{
+oroute.get('/payment',authMiddleware,async(req,res)=>{
     const product = await productmodel.findOne({productId: req.session.productId})
     
     res.render('payment',{
@@ -17,14 +18,15 @@ oroute.get('/payment',async(req,res)=>{
     req.session.message = null
 })
 
-oroute.post('/payment',async(req,res)=>{
+oroute.post('/payment',authMiddleware,async(req,res)=>{
     
     const result = await createOrder(req,res);
     console.log(req.body.paymentMethod);
 
     if(result.success == true){
         res.render('orderplaced',{
-            loggedIn:req.session.loggedIn
+            loggedIn:req.session.loggedIn,
+            order:result.order
         })
     }
     else{
@@ -33,15 +35,15 @@ oroute.post('/payment',async(req,res)=>{
     }
 
 })
-oroute.post("/cart", async (req, res) => {
+oroute.post("/cart",authMiddleware, async (req, res) => {
     const { productId } = req.body;
     const result = await createCart(req, productId);
     res.json(result); 
 });
 
 
-oroute.get("/cart", async (req, res) => {
-    const result = await createCart(req); // no productId, just get cart
+oroute.get("/cart",authMiddleware, async (req, res) => {
+    const result = await createCart(req); 
 
     if (!result.success || !result.cart) {
         return res.render("cart", { cartItems: [], totals: { totalAmount: 0, itemCount: 0 }, loggedIn: req.session.loggedIn || false });
@@ -70,7 +72,7 @@ oroute.get("/cart", async (req, res) => {
 
 
 
-oroute.delete('/cart/:productId', async (req, res) => {
+oroute.delete('/cart/:productId',authMiddleware, async (req, res) => {
     const { productId } = req.params;
 
     try {
@@ -107,15 +109,13 @@ oroute.delete('/cart/:productId', async (req, res) => {
 
 
 
-oroute.get('/orders', async (req, res) => {
+oroute.get('/orders',authMiddleware, async (req, res) => {
   const orders = await Order.find({
     userId: req.session.userId
   });
 
-  if (!orders.length) {
-    return res.status(404).send('No orders found');
-  }
-
+  
+  
   res.render('orders', { 
     orders,
     loggedIn:req.session.loggedIn

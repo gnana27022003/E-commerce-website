@@ -12,7 +12,8 @@ async function storeSellerData(req,res) {
             
         };
         req.session.sellerId = data.sellerId
-        console.log(req.body.name)
+        
+        console.log(req.session.sellerId)
         try {
             req.session.user=data
             

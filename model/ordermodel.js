@@ -9,6 +9,7 @@ const orderItemSchema = new mongoose.Schema(
     price: { type: Number, required: true }, // snapshot price
 
     sellerId: { type: String },
+    productImage: { type: String }
   },
   { _id: false }
 );
@@ -30,7 +31,12 @@ const shippingAddressSchema = new mongoose.Schema(
 
 const paymentSchema = new mongoose.Schema(
   {
-    transactionId: { type: String, unique: true }, 
+   transactionId: {
+   type: String,
+   unique: true,
+   sparse: true
+}
+, 
     paymentMethod: {
       type: String,
       enum: ["card", "upi", "cod"],

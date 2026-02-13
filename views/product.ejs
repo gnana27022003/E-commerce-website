@@ -91,9 +91,11 @@
         Add to Cart
         </button>
 
+        <button class="btn-buy" onclick="goToCheckout()">
+         Buy Now
+        </button>
 
-        <button class="btn-buy" onclick="location.href='/checkout'">Buy Now </button>
-      </div>
+        </div>
     </div>
   </div>
 
@@ -251,6 +253,13 @@ document.querySelectorAll(".btn-cart").forEach(button => {
         }
     });
 });
+
+function goToCheckout() {
+    const quantity = document.getElementById("quantity").value;
+    window.location.href = `/checkout?quantity=${quantity}`;
+}
+
+
 </script>
 
 </body>

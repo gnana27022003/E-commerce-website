@@ -9,8 +9,8 @@ const createOrder = async (req, res) => {
 
     const userId = req.session.userId;
     const addressId = req.session.selectedAddressId;
-    const productId = req.session.productId;   // 🔥 BUY NOW PRODUCT
-    const paymentMethod = req.body.paymentMethod; // upi | card | cod
+    const productId = req.session.productId;   
+    const paymentMethod = req.body.paymentMethod; 
 
     if (!userId || !addressId || !productId || !paymentMethod) {
       throw new Error("Missing order details");
@@ -50,15 +50,18 @@ const createOrder = async (req, res) => {
 
     /* ================= BUILD ORDER ITEM ================= */
 
-    const items = [
-      {
-        productId: product.productId,
-        productName: product.productName,
-        quantity: 1,                  // BUY NOW = 1
-        price: product.price,         // snapshot price
-        sellerId: product.sellerId,
-      },
-    ];
+   const items = [
+  {
+    productId: product.productId,
+    productName: product.productName,
+    quantity: req.session.quantity,
+    price: product.price,
+    sellerId: product.sellerId,
+
+    productImage: product.productImages?.[0]?.filename || null
+  },
+];
+
 
     const totalAmount = product.price;
 
@@ -75,7 +78,7 @@ const createOrder = async (req, res) => {
 
     /* ================= CREATE ORDER ================= */
 
-    await ordermodel.create({
+    const order = await ordermodel.create({
       orderId: "ORD" + Date.now(),
       userId,
       email: user.email,
@@ -90,7 +93,7 @@ const createOrder = async (req, res) => {
 
     delete req.session.productId; // prevent duplicate orders
 
-    return { success: true };
+    return { success: true ,order:order};
 
   } catch (err) {
     console.error("ORDER ERROR:", err.message);

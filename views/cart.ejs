@@ -22,18 +22,18 @@
             <!-- Left Section: Cart Items -->
             <div class="cart-items-section">
                 
-                <!-- Delivery Address Card -->
-                <div class="address-card">
-                    <div class="card-header">
-                        <h3>From Saved Addresses</h3>
-                        <button class="btn-link">Enter Delivery Pincode</button>
-                    </div>
-                </div>
+               
 
                 <!-- Cart Items -->
                 <div class="cart-items-list" id="cartItemsList">
                     <% if (cartItems.length === 0) { %>
-                        <p class="empty-cart">Your cart is empty</p>
+                        <div class="place-order-section" >
+                            <div class="empty-state" align="center">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                            <h2>your cart is empty</h2>
+                        </div>
+
+                        </div>
                     <% } else { %>
                         <% cartItems.forEach((item, index) => { %>
                             <div class="cart-item-card">
@@ -61,10 +61,7 @@
 
 
                 <!-- Place Order Button -->
-                <div class="place-order-section">
-                    <button class="btn-place-order" onclick="window.location.href='checkout.html'">PLACE ORDER</button>
-                </div>
-
+                
             </div>
 
             <!-- Right Section: Price Details -->

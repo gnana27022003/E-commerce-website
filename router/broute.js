@@ -2,7 +2,8 @@ const express = require('express')
 const broute = express.Router()
 let productmodel = require('../model/productmodel');
 const reviewmodel = require('../model/reviewmodel');
-const {storeReviewData} = require('../userjs/storeReviewData')
+const {storeReviewData} = require('../userjs/storeReviewData');
+const { authMiddleware } = require('../middleware/authMiddleware');
 
 
 broute.get('/', async(req,res) => {
@@ -24,7 +25,7 @@ broute.get('/logout', async(req,res)=>{
     });
 })
 
-broute.get('/who',async(req,res)=>{
+broute.get('/who',authMiddleware,async(req,res)=>{
     res.render('userorseller')
 })
 
@@ -37,7 +38,7 @@ broute.get('/seller', async(req,res)=>{
     res.redirect('/sellerinfo')
 })
 
-broute.get('/products/:cat',async(req,res)=>{
+broute.get('/products/:cat',authMiddleware,async(req,res)=>{
     const category=req.params.cat;
     try {
         const products = await productmodel.find({category:category})
@@ -49,7 +50,7 @@ broute.get('/products/:cat',async(req,res)=>{
 })
 
 
-broute.get('/product/:id', async (req, res) => {
+broute.get('/product/:id',authMiddleware, async (req, res) => {
   try {
     const product = await productmodel.findOne({ productId: req.params.id });
     req.session.productId = product.productId;
@@ -86,7 +87,7 @@ broute.get('/product/:id', async (req, res) => {
 });
 
 
-broute.get('/review/:id',async(req,res)=>{
+broute.get('/review/:id',authMiddleware,async(req,res)=>{
     const productId =  req.params.id;
     res.render('review',{productId})
 })

@@ -9,7 +9,7 @@ const { storeProductData } = require('../sellerjs/storeProductData');
 const { updateProductData } = require('../sellerjs/updateProductData');
 const Order = require('../model/ordermodel')
 const upload = require('../sellerjs/multer');
-
+const {authMiddleware} = require('../middleware/authMiddleware')
 
 sroute.get('/sellerinfo', async (req, res) => {
   res.render('dashboard/sellerinfo');
@@ -29,10 +29,11 @@ sroute.post('/sellerinfo', async (req, res) => {
 });
 
 
-sroute.get('/home', async (req, res) => {
+sroute.get('/home',authMiddleware, async (req, res) => {
   const seller = await sellermodel.findOne({ email: req.session.email });
-  const products = await productmodel.find();
-
+  const products = await productmodel.find({ sellerId: req.session.sellerId });
+  req.session.sellerId = seller.sellerId
+  console.log(req.session.sellerId);
   const message = req.session.message;
   req.session.message = null;
 
@@ -45,18 +46,23 @@ sroute.get('/home', async (req, res) => {
   
 });
 
-sroute.get('/ordersdet',async(req,res)=>{
-    const orders = await Order.find({ sellerId: req.session.sellerId });
-    res.render('dashboard/orders', { orders });
+sroute.get('/ordersdet', authMiddleware, async (req, res) => {
+  const seller = await sellermodel.findOne({sellerId:req.session.sellerId})
+  const orders = await Order.find({
+    "items.sellerId": req.session.sellerId
+  });
 
-})
+  res.render('dashboard/orders', { orders,seller });
 
-sroute.get('/addprod', async (req, res) => {
+});
+
+
+sroute.get('/addprod',authMiddleware, async (req, res) => {
   const seller = await sellermodel.findOne({ email: req.session.email });
   res.render('dashboard/addprod', { seller });
 });
 
-sroute.get('/add', async (req, res) => {
+sroute.get('/add',authMiddleware, async (req, res) => {
   res.render('dashboard/prodform', {
     errorMessage: null,
     successMessage: null,
@@ -70,7 +76,6 @@ sroute.post(
   async (req, res) => {
 
     const seller= await sellermodel.findOne({email:req.session.email})
-    req.session.sellerId=seller.uniqueId
     const result =await storeProductData(req, res);
 
     if (result.success) {
@@ -91,15 +96,15 @@ sroute.post(
 
 
 
-sroute.get('/profile', async (req, res) => {
+sroute.get('/profile',authMiddleware, async (req, res) => {
   const seller = await sellermodel.findOne({ email: req.session.email });
   res.render('dashboard/profile', { seller });
 });
 
 
-sroute.get('/sproduct/:id', async (req, res) => {
+sroute.get('/sproduct/:id',authMiddleware, async (req, res) => {
   const product = await productmodel.findOne({ productId: req.params.id });
-
+  
   if (!product) {
     return res.status(404).send('Product not found');
   }
@@ -135,7 +140,7 @@ sroute.post('/sproduct/delete/:id',async(req,res)=>{
 })
 
 
-sroute.get('/order/:id', async (req,res)=>{
+sroute.get('/order/:id',authMiddleware, async (req,res)=>{
   const order = await Order.findOne({
     orderId: req.params.id,
     "items.sellerId": req.session.sellerId

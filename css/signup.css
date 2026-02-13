@@ -91,7 +91,7 @@
       display: inline-block;
       width: 100%;
       padding: 12px;
-      background-color: #2a55e5;
+      background-color: #2874f0;
       color: white;
       border: none;
       border-radius: 5px;
@@ -102,7 +102,7 @@
       transition: background-color 0.3s ease;
     }
     .signin-link {
-      color: #2a55e5; /* Original color */
+      color: #2874f0; /* Original color */
       text-decoration: underline; /* Optional: removes underline */
   }
 

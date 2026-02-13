@@ -21,7 +21,7 @@ const storeProductData = async (req, res) => {
                 }
             }
         }
-
+        console.log(req.session.sellerId)
         const stock = Number(req.body.stock) || 0;
         const price = Number(req.body.price) || 0;
         const newProduct = new Product({

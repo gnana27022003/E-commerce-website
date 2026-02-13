@@ -6,12 +6,12 @@
         }
 
         :root {
-            --primary: #2a55e5;
+            --primary: #2874f0;
             --secondary: #75B06D;
             --accent: #DAD887;
             --light: white;
             --white: #ffffff;
-            --text-dark: #2a55e5;
+            --text-dark: #2874f0;
             --text-light: #6c757d;
         }
 
@@ -395,7 +395,7 @@
     padding: 12px 15px;
     cursor: pointer;
     font-size: 14px;
-    color: #2a55e5;
+    color: #2874f0;
 }
 
 .profile-item:hover {
@@ -435,7 +435,7 @@
 .profile-menu a {
     padding: 12px 15px;
     text-decoration: none;
-    color: #2a55e5;
+    color: #2874f0;
     font-size: 14px;
 }
 

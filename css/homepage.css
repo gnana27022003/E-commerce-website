@@ -622,3 +622,5 @@ body
     .banner-content p { font-size: 13px; }
     .footer-container { grid-template-columns: 1fr; }
 }
+.logo-section a{display:block;}
+.logo-img{height:100px;width:auto;}
